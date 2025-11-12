@@ -6,30 +6,37 @@
     <title>Ultimate Meme Generator</title>
     <link rel="stylesheet" href="css/styles.css" />
   </head>
+
   <body onload="onInit()">
     <header class="header">
       <h1>Ultimate Meme Generator</h1>
     </header>
+
     <main class="main-content">
-      <section class="gallery"></section>
-      <section class="editor" style="display: none">
-        <button class="btn-back" onclick="onBackToGallery()">
-          Back to Gallery
-        </button>
-        <input
-          type="text"
-          class="text-input"
-          placeholder="Enter meme text"
-          oninput="onSetLineTxt(this.value)"
-        />
-        <input
-          type="color"
-          class="color-input"
-          value="#ff0000"
-          onchange="onSetColor(this.value)"
-        />
+      <section class="gallery">
+      </section>
+
+      <section class="editor hidden">
+        <button class="btn-back" onclick="onBackToGallery()">Back to Gallery</button>
+
+
+        <div class="input-row">
+          <input
+            type="text"
+            class="text-input"
+            placeholder="Enter meme text"
+            oninput="onSetLineTxt(this.value)"
+          />
+          <input
+            type="color"
+            class="color-input"
+            value="#ff0000"
+            onchange="onSetColor(this.value)"
+          />
+        </div>
       </section>
     </main>
+
     <script src="js/gallery-controller.js"></script>
     <script src="js/meme-service.js"></script>
     <script src="js/meme-controller.js"></script>
