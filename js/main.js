@@ -1,2 +1,5 @@
-//Wednesday1400
-function updateWednesday1400()
+'use strict'
+
+function onInit() {
+  renderMeme()
+}
