@@ -12,12 +12,21 @@
     </header>
     <main class="main-content">
       <section class="gallery"></section>
-      <section class="editor">
+      <section class="editor" style="display: none">
+        <button class="btn-back" onclick="onBackToGallery()">
+          Back to Gallery
+        </button>
         <input
           type="text"
           class="text-input"
           placeholder="Enter meme text"
           oninput="onSetLineTxt(this.value)"
+        />
+        <input
+          type="color"
+          class="color-input"
+          value="#ff0000"
+          onchange="onSetColor(this.value)"
         />
       </section>
     </main>

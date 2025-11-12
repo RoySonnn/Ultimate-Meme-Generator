@@ -12,13 +12,13 @@ function renderMeme() {
     gElCanvas.height = 500
     gCtx = gElCanvas.getContext('2d')
 
-const elEditor = document.querySelector('.editor')
-const elCanvasContainer = document.createElement('div')
-elCanvasContainer.classList.add('canvas-container')
-elCanvasContainer.appendChild(gElCanvas)
+    const elEditor = document.querySelector('.editor')
+    const elCanvasContainer = document.createElement('div')
+    elCanvasContainer.classList.add('canvas-container')
+    elCanvasContainer.appendChild(gElCanvas)
 
-elEditor.querySelector('.canvas-container')?.remove()
-elEditor.appendChild(elCanvasContainer)
+    elEditor.querySelector('.canvas-container')?.remove()
+    elEditor.appendChild(elCanvasContainer)
 
 
 
@@ -38,6 +38,12 @@ elEditor.appendChild(elCanvasContainer)
 
 function onSetLineTxt(txt) {
     setLineTxt(txt)
+    renderMeme()
+}
+
+
+function onSetColor(color) {
+    setLineColor(color)
     renderMeme()
 }
 
