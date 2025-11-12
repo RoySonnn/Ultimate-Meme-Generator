@@ -12,8 +12,17 @@
     </header>
     <main class="main-content">
       <section class="gallery"></section>
-      <section class="editor"></section>
+      <section class="editor">
+        <input
+          type="text"
+          class="text-input"
+          placeholder="Enter meme text"
+          oninput="onSetLineTxt(this.value)"
+        />
+      </section>
     </main>
+    <script src="js/gallery-controller.js"></script>
+    <script src="js/meme-service.js"></script>
     <script src="js/meme-controller.js"></script>
     <script src="js/main.js"></script>
   </body>
