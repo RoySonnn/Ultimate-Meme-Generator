@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #fafafa;
+  color: #111;
+  text-align: center;
+}
+
+
+.gallery,
+.editor {
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  min-height: 240px;
+}
