@@ -2,12 +2,18 @@
 
 var gElCanvas
 var gCtx
+var gIsDragging = false
+var gDraggedLineIdx = null
+var gLastPos = null
 
 function initMemeEditor() {
     gElCanvas = document.querySelector('#meme-canvas')
     if (!gElCanvas) return
     gCtx = gElCanvas.getContext('2d')
-    gElCanvas.addEventListener('click', onCanvasClick)
+
+    gElCanvas.addEventListener('mousedown', onDown)
+    gElCanvas.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
 }
 
 function renderMeme() {
@@ -39,20 +45,9 @@ function renderMeme() {
             gCtx.strokeText(line.txt, line.x, line.y)
 
             if (idx === meme.selectedLineIdx) {
-                var metrics = gCtx.measureText(line.txt)
-                var width = metrics.width
-                var xStart = line.x
-                if (align === 'center') xStart = line.x - width / 2
-                else if (align === 'right') xStart = line.x - width
-
-                var padding = 8
-                var rectX = xStart - padding
-                var rectY = line.y - line.size / 2 - padding
-                var rectW = width + padding * 2
-                var rectH = line.size + padding * 2
-
+                var rect = getLineRect(line)
                 gCtx.strokeStyle = 'blue'
-                gCtx.strokeRect(rectX, rectY, rectW, rectH)
+                gCtx.strokeRect(rect.x, rect.y, rect.w, rect.h)
             }
         })
     }
@@ -135,47 +130,80 @@ function onDeleteLine() {
     renderMeme()
 }
 
-function onCanvasClick(ev) {
+function onAddSticker(emoji) {
+    var elInput = document.querySelector('.text-input')
+    if (!elInput) return
+    elInput.value += emoji
+    onSetLineTxt(elInput.value)
+}
+
+function onDown(ev) {
+    var offsetX = ev.offsetX
+    var offsetY = ev.offsetY
     var meme = getMeme()
-    if (!gElCanvas || !gCtx) return
-
-    var rect = gElCanvas.getBoundingClientRect()
-    var x = ev.clientX - rect.left
-    var y = ev.clientY - rect.top
-
-    var clickedIdx = -1
 
     for (var i = meme.lines.length - 1; i >= 0; i--) {
         var line = meme.lines[i]
-        var font = line.font || 'Impact'
-        var align = line.align || 'center'
-
-        gCtx.font = line.size + 'px ' + font
-        gCtx.textAlign = align
-        gCtx.textBaseline = 'middle'
-
-        var metrics = gCtx.measureText(line.txt)
-        var width = metrics.width
-        var xStart = line.x
-        if (align === 'center') xStart = line.x - width / 2
-        else if (align === 'right') xStart = line.x - width
-
-        var padding = 8
-        var left = xStart - padding
-        var right = xStart + width + padding
-        var top = line.y - line.size / 2 - padding
-        var bottom = line.y + line.size / 2 + padding
-
-        if (x >= left && x <= right && y >= top && y <= bottom) {
-            clickedIdx = i
-            break
+        var rect = getLineRect(line)
+        if (
+            offsetX >= rect.x &&
+            offsetX <= rect.x + rect.w &&
+            offsetY >= rect.y &&
+            offsetY <= rect.y + rect.h
+        ) {
+            setSelectedLine(i)
+            gDraggedLineIdx = i
+            gIsDragging = true
+            gLastPos = { x: offsetX, y: offsetY }
+            gElCanvas.style.cursor = 'grabbing'
+            updateEditorInputs()
+            renderMeme()
+            return
         }
     }
+}
 
-    if (clickedIdx === -1) return
-    setSelectedLine(clickedIdx)
-    updateEditorInputs()
+function onMove(ev) {
+    var offsetX = ev.offsetX
+    var offsetY = ev.offsetY
+    var meme = getMeme()
+
+    if (!gIsDragging) {
+        var hovering = false
+        for (var i = meme.lines.length - 1; i >= 0; i--) {
+            var line = meme.lines[i]
+            var rect = getLineRect(line)
+            if (
+                offsetX >= rect.x &&
+                offsetX <= rect.x + rect.w &&
+                offsetY >= rect.y &&
+                offsetY <= rect.y + rect.h
+            ) {
+                hovering = true
+                break
+            }
+        }
+        gElCanvas.style.cursor = hovering ? 'grab' : 'default'
+        return
+    }
+
+    var line = meme.lines[gDraggedLineIdx]
+    var dx = offsetX - gLastPos.x
+    var dy = offsetY - gLastPos.y
+
+    line.x += dx
+    line.y += dy
+
+    gLastPos = { x: offsetX, y: offsetY }
+    gElCanvas.style.cursor = 'grabbing'
     renderMeme()
+}
+
+function onUp() {
+    gIsDragging = false
+    gDraggedLineIdx = null
+    gLastPos = null
+    gElCanvas.style.cursor = 'default'
 }
 
 function onSaveMeme() {
@@ -183,11 +211,27 @@ function onSaveMeme() {
     alert('Meme saved!')
 }
 
-function onAddSticker(emoji) {
-    const elInput = document.querySelector('.text-input')
-    if (!elInput) return
-    elInput.value += emoji
-    onSetLineTxt(elInput.value)
+function getLineRect(line) {
+    var font = line.font || 'Impact'
+    var align = line.align || 'center'
+    gCtx.font = line.size + 'px ' + font
+    gCtx.textAlign = align
+    gCtx.textBaseline = 'middle'
+
+    var txt = line.txt || ''
+    var metrics = gCtx.measureText(txt)
+    var width = metrics.width
+    var xStart = line.x
+    if (align === 'center') xStart = line.x - width / 2
+    else if (align === 'right') xStart = line.x - width
+
+    var padding = 10
+    var height = line.size
+
+    return {
+        x: xStart - padding,
+        y: line.y - height / 2 - padding,
+        w: width + padding * 2,
+        h: height + padding * 2
+    }
 }
-
-
