@@ -31,8 +31,6 @@
           <div class="editor-panel">
             <h2 class="panel-title">Edit Meme</h2>
 
-            <button onclick="onSaveMeme()">Save Meme</button>
-
             <div class="line-toolbar">
               <span class="line-counter">
                 <span>Text line:</span>
@@ -99,9 +97,12 @@
               <button onclick="onAddSticker('😎')">😎</button>
             </div>
 
-            <button class="btn-share" onclick="onDownloadMeme()">
-              Download
-            </button>
+            <div class="actions-row">
+              <button class="btn-save" onclick="onSaveMeme()">Save Meme</button>
+              <button class="btn-share" onclick="onDownloadMeme()">
+                Download
+              </button>
+            </div>
           </div>
         </div>
       </section>
