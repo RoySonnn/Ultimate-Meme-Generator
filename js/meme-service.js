@@ -13,7 +13,6 @@ function initImgs() {
     }
 }
 
-
 var gMeme = {
     selectedImgId: 1,
     selectedLineIdx: 0,
@@ -150,3 +149,4 @@ function loadFromStorage(key) {
     if (!str) return null
     return JSON.parse(str)
 }
+

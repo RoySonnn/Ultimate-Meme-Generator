@@ -183,3 +183,11 @@ function onSaveMeme() {
     alert('Meme saved!')
 }
 
+function onAddSticker(emoji) {
+    const elInput = document.querySelector('.text-input')
+    if (!elInput) return
+    elInput.value += emoji
+    onSetLineTxt(elInput.value)
+}
+
+

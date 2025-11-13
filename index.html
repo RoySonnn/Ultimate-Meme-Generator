@@ -16,9 +16,7 @@
     <main class="main-content">
       <section class="gallery"></section>
       <section class="saved-memes hidden">
-        <button class="btn-back" onclick="onBackToGallery()">
-          Back
-        </button>
+        <button class="btn-back" onclick="onBackToGallery()">Back</button>
       </section>
       <section class="editor hidden">
         <button class="btn-back" onclick="onBackToGallery()">
@@ -32,6 +30,8 @@
 
           <div class="editor-panel">
             <h2 class="panel-title">Edit Meme</h2>
+
+            <button onclick="onSaveMeme()">Save Meme</button>
 
             <div class="line-toolbar">
               <span class="line-counter">
@@ -90,7 +90,14 @@
               placeholder="Enter meme text"
               oninput="onSetLineTxt(this.value)"
             />
-            <button onclick="onSaveMeme()">Save Meme</button>
+
+            <div class="emojis-row">
+              <button onclick="onAddSticker('😜')">😜</button>
+              <button onclick="onAddSticker('😍')">😍</button>
+              <button onclick="onAddSticker('😂')">😂</button>
+              <button onclick="onAddSticker('🔥')">🔥</button>
+              <button onclick="onAddSticker('😎')">😎</button>
+            </div>
 
             <button class="btn-share" onclick="onDownloadMeme()">
               Download
