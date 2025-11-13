@@ -17,6 +17,7 @@ var gMeme = {
     ]
 }
 
+
 var gKeywordSearchCountMap = { funny: 12, cat: 16, baby: 2 }
 
 function getMeme() {
@@ -42,4 +43,19 @@ function setLineColor(color) {
 
 function changeFontSize(diff) {
     gMeme.lines[gMeme.selectedLineIdx].size += diff
+}
+
+
+function addLine() {
+    gMeme.lines.push({
+        txt: '',
+        size: 20,
+        color: 'red'
+    })
+    gMeme.selectedLineIdx = gMeme.lines.length - 1
+}
+
+function switchLine() {
+    gMeme.selectedLineIdx++
+    if (gMeme.selectedLineIdx >= gMeme.lines.length) gMeme.selectedLineIdx = 0
 }
