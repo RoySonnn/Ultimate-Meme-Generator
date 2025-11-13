@@ -32,7 +32,7 @@ button {
 }
 
 .logo {
-  font-family: "Impact", "Arial Black"
+  font-family: "Impact", "Arial Black";
   font-size: 1.4rem;
   color: #ff9100;
   text-shadow: 1px 1px 0 #000;
