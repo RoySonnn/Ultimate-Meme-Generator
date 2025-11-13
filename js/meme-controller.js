@@ -54,3 +54,8 @@ function onDownloadMeme() {
     link.click()
 }
 
+function onChangeFontSize(diff) {
+    changeFontSize(diff)
+    renderMeme()
+}
+
