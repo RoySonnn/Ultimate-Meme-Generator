@@ -47,3 +47,10 @@ function onSetColor(color) {
     renderMeme()
 }
 
+function onDownloadMeme() {
+    const link = document.createElement('a')
+    link.download = 'meme.png'
+    link.href = gElCanvas.toDataURL('image/png')
+    link.click()
+}
+
