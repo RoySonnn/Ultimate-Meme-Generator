@@ -3,68 +3,81 @@
 var gElCanvas
 var gCtx
 
-function renderMeme() {
-    const meme = getMeme()
-    const img = getImgById(meme.selectedImgId)
-
-    gElCanvas = document.createElement('canvas')
-    gElCanvas.width = 500
-    gElCanvas.height = 500
+function initMemeEditor() {
+    gElCanvas = document.querySelector('#meme-canvas')
+    if (!gElCanvas) return
     gCtx = gElCanvas.getContext('2d')
-
-    const elEditor = document.querySelector('.editor')
-    const elCanvasContainer = document.createElement('div')
-    elCanvasContainer.classList.add('canvas-container')
-    elCanvasContainer.appendChild(gElCanvas)
-
-    elEditor.querySelector('.canvas-container')?.remove()
-    elEditor.appendChild(elCanvasContainer)
-
     gElCanvas.addEventListener('click', onCanvasClick)
+}
 
-    const elImg = new Image()
+function renderMeme() {
+    var meme = getMeme()
+    var img = getImgById(meme.selectedImgId)
+    if (!gElCanvas || !gCtx || !img) return
+
+    var elImg = new Image()
     elImg.src = img.url
-    elImg.onload = () => {
+    elImg.onload = function () {
+        gElCanvas.width = elImg.width
+        gElCanvas.height = elImg.height
+        gCtx.clearRect(0, 0, gElCanvas.width, gElCanvas.height)
         gCtx.drawImage(elImg, 0, 0, gElCanvas.width, gElCanvas.height)
 
-        const memeNow = getMeme()
+        meme.lines.forEach(function (line, idx) {
+            var font = line.font || 'Impact'
+            var align = line.align || 'center'
+            var strokeColor = line.strokeColor || '#000000'
 
-        memeNow.lines.forEach((line, idx) => {
-            gCtx.font = `${line.size}px Impact`
+            gCtx.lineWidth = 2
+            gCtx.font = line.size + 'px ' + font
+            gCtx.textAlign = align
+            gCtx.textBaseline = 'middle'
             gCtx.fillStyle = line.color
-            gCtx.strokeStyle = 'black'
-            gCtx.textAlign = 'center'
+            gCtx.strokeStyle = strokeColor
+
             gCtx.fillText(line.txt, line.x, line.y)
             gCtx.strokeText(line.txt, line.x, line.y)
 
-            if (idx === memeNow.selectedLineIdx) {
-                const width = gCtx.measureText(line.txt).width
-                const left = line.x - width / 2 - 5
-                const top = line.y - line.size
-                const rectWidth = width + 10
-                const rectHeight = line.size + 10
+            if (idx === meme.selectedLineIdx) {
+                var metrics = gCtx.measureText(line.txt)
+                var width = metrics.width
+                var xStart = line.x
+                if (align === 'center') xStart = line.x - width / 2
+                else if (align === 'right') xStart = line.x - width
+
+                var padding = 8
+                var rectX = xStart - padding
+                var rectY = line.y - line.size / 2 - padding
+                var rectW = width + padding * 2
+                var rectH = line.size + padding * 2
+
                 gCtx.strokeStyle = 'blue'
-                gCtx.strokeRect(left, top, rectWidth, rectHeight)
+                gCtx.strokeRect(rectX, rectY, rectW, rectH)
             }
         })
     }
 }
 
-
 function updateEditorInputs() {
-    const meme = getMeme()
-    const line = meme.lines[meme.selectedLineIdx]
+    var meme = getMeme()
+    var line = meme.lines[meme.selectedLineIdx]
+    if (!line) return
 
-    const elTextInput = document.querySelector('.text-input')
-    const elColorInput = document.querySelector('.color-input')
+    var elTextInput = document.querySelector('.text-input')
+    var colorInputs = document.querySelectorAll('.color-picker input[type="color"]')
+    var elFontSelect = document.querySelector('.font-row select')
+    var elLineIndex = document.querySelector('#line-index')
+    var elLineCount = document.querySelector('#line-count')
 
-    elTextInput.value = line.txt
-    elColorInput.value = line.color
+    if (elTextInput) elTextInput.value = line.txt
+    if (colorInputs[0]) colorInputs[0].value = line.color
+    if (colorInputs[1]) colorInputs[1].value = line.strokeColor || '#000000'
+    if (elFontSelect) elFontSelect.value = line.font || 'Impact'
+    if (elLineIndex) elLineIndex.textContent = meme.selectedLineIdx + 1
+    if (elLineCount) elLineCount.textContent = meme.lines.length
 
-    elTextInput.focus()
+    if (elTextInput) elTextInput.focus()
 }
-
-
 
 function onSetLineTxt(txt) {
     setLineTxt(txt)
@@ -76,8 +89,24 @@ function onSetColor(color) {
     renderMeme()
 }
 
+function onSetStrokeColor(color) {
+    setStrokeColor(color)
+    renderMeme()
+}
+
+function onSetFont(font) {
+    setFont(font)
+    renderMeme()
+}
+
+function onSetAlign(align) {
+    setAlign(align)
+    renderMeme()
+}
+
 function onDownloadMeme() {
-    const link = document.createElement('a')
+    if (!gElCanvas) return
+    var link = document.createElement('a')
     link.download = 'meme.png'
     link.href = gElCanvas.toDataURL('image/png')
     link.click()
@@ -94,34 +123,48 @@ function onAddLine() {
     renderMeme()
 }
 
-
-
 function onSwitchLine() {
     switchLine()
     updateEditorInputs()
     renderMeme()
 }
 
-
+function onDeleteLine() {
+    deleteLine()
+    updateEditorInputs()
+    renderMeme()
+}
 
 function onCanvasClick(ev) {
-    const meme = getMeme()
+    var meme = getMeme()
     if (!gElCanvas || !gCtx) return
 
-    const rect = gElCanvas.getBoundingClientRect()
-    const x = ev.offsetX !== undefined ? ev.offsetX : ev.clientX - rect.left
-    const y = ev.offsetY !== undefined ? ev.offsetY : ev.clientY - rect.top
+    var rect = gElCanvas.getBoundingClientRect()
+    var x = ev.clientX - rect.left
+    var y = ev.clientY - rect.top
 
-    let clickedIdx = -1
+    var clickedIdx = -1
 
     for (var i = meme.lines.length - 1; i >= 0; i--) {
-        const line = meme.lines[i]
-        gCtx.font = `${line.size}px Impact`
-        const width = gCtx.measureText(line.txt).width
-        const left = line.x - width / 2 - 5
-        const right = line.x + width / 2 + 5
-        const top = line.y - line.size
-        const bottom = line.y + 10
+        var line = meme.lines[i]
+        var font = line.font || 'Impact'
+        var align = line.align || 'center'
+
+        gCtx.font = line.size + 'px ' + font
+        gCtx.textAlign = align
+        gCtx.textBaseline = 'middle'
+
+        var metrics = gCtx.measureText(line.txt)
+        var width = metrics.width
+        var xStart = line.x
+        if (align === 'center') xStart = line.x - width / 2
+        else if (align === 'right') xStart = line.x - width
+
+        var padding = 8
+        var left = xStart - padding
+        var right = xStart + width + padding
+        var top = line.y - line.size / 2 - padding
+        var bottom = line.y + line.size / 2 + padding
 
         if (x >= left && x <= right && y >= top && y <= bottom) {
             clickedIdx = i

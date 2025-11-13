@@ -11,8 +11,11 @@ var gMeme = {
     lines: [
         {
             txt: 'I sometimes eat Falafel',
-            size: 20,
-            color: 'red',
+            size: 30,
+            color: '#ffffff',
+            strokeColor: '#000000',
+            font: 'Impact',
+            align: 'center',
             x: 250,
             y: 60
         }
@@ -26,7 +29,7 @@ function getMeme() {
 }
 
 function getImgById(imgId) {
-    return gImgs.find(img => img.id === imgId)
+    return gImgs.find(function (img) { return img.id === imgId })
 }
 
 function setLineTxt(txt) {
@@ -39,6 +42,18 @@ function setImg(imgId) {
 
 function setLineColor(color) {
     gMeme.lines[gMeme.selectedLineIdx].color = color
+}
+
+function setStrokeColor(color) {
+    gMeme.lines[gMeme.selectedLineIdx].strokeColor = color
+}
+
+function setFont(font) {
+    gMeme.lines[gMeme.selectedLineIdx].font = font
+}
+
+function setAlign(align) {
+    gMeme.lines[gMeme.selectedLineIdx].align = align
 }
 
 function changeFontSize(diff) {
@@ -54,8 +69,11 @@ function addLine() {
     else y = 500 / 2
     gMeme.lines.push({
         txt: '',
-        size: 20,
-        color: 'red',
+        size: 30,
+        color: '#ffffff',
+        strokeColor: '#000000',
+        font: 'Impact',
+        align: 'center',
         x: x,
         y: y
     })
@@ -65,6 +83,30 @@ function addLine() {
 function switchLine() {
     gMeme.selectedLineIdx++
     if (gMeme.selectedLineIdx >= gMeme.lines.length) gMeme.selectedLineIdx = 0
+}
+
+function deleteLine() {
+    if (!gMeme.lines.length) return
+    gMeme.lines.splice(gMeme.selectedLineIdx, 1)
+
+    if (!gMeme.lines.length) {
+        gMeme.lines.push({
+            txt: '',
+            size: 30,
+            color: '#ffffff',
+            strokeColor: '#000000',
+            font: 'Impact',
+            align: 'center',
+            x: 250,
+            y: 60
+        })
+        gMeme.selectedLineIdx = 0
+        return
+    }
+
+    if (gMeme.selectedLineIdx >= gMeme.lines.length) {
+        gMeme.selectedLineIdx = gMeme.lines.length - 1
+    }
 }
 
 function setSelectedLine(idx) {

@@ -9,36 +9,77 @@
 
   <body onload="onInit()">
     <header class="header">
-      <h1>Ultimate Meme Generator</h1>
+      <div class="logo">Ultimate Meme Generator</div>
     </header>
 
     <main class="main-content">
       <section class="gallery"></section>
 
       <section class="editor hidden">
-        <button class="btn-back" onclick="onBackToGallery()">
-          Back to Gallery
-        </button>
+        <button class="btn-back" onclick="onBackToGallery()">← Back</button>
 
-        <div class="input-row">
-          <button onclick="onDownloadMeme()">Download</button>
-          <button onclick="onAddLine()">Add Line</button>
-          <button onclick="onSwitchLine()">Switch Line</button>
+        <div class="editor-layout">
+          <div class="canvas-wrapper">
+            <canvas id="meme-canvas"></canvas>
+          </div>
 
-          <input
-            type="text"
-            class="text-input"
-            placeholder="Enter meme text"
-            oninput="onSetLineTxt(this.value)"
-          />
-          <input
-            type="color"
-            class="color-input"
-            value="#ff0000"
-            onchange="onSetColor(this.value)"
-          />
-          <button onclick="onChangeFontSize(2)">A+</button>
-          <button onclick="onChangeFontSize(-2)">A-</button>
+          <div class="editor-panel">
+            <h2 class="panel-title">Edit Meme</h2>
+
+            <div class="line-toolbar">
+              <span class="line-counter">
+                <span>Text line:</span> 
+                <span id="line-index">1</span> /
+                <span id="line-count">1</span>
+              </span>
+
+              <div class="line-actions">
+                <button onclick="onSwitchLine()">⇅</button>
+                <button onclick="onAddLine()">＋</button>
+                <button onclick="onDeleteLine()">🗑</button>
+              </div>
+            </div>
+
+            <div class="font-row">
+              <select onchange="onSetFont(this.value)">
+                <option value="Impact">Impact</option>
+                <option value="Arial">Arial</option>
+                <option value="Comic Sans MS">Comic Sans</option>
+              </select>
+
+              <div class="font-size">
+                <button onclick="onChangeFontSize(-2)">A−</button>
+                <button onclick="onChangeFontSize(2)">A＋</button>
+              </div>
+            </div>
+
+            <div class="align-row">
+              <button onclick="onSetAlign('left')">⬅️</button>
+              <button onclick="onSetAlign('center')">=</button>
+              <button onclick="onSetAlign('right')">➡️</button>
+
+              <label class="color-picker">
+                <span>Text color</span>
+                <input type="color" onchange="onSetColor(this.value)" value="#ffffff" />
+              </label>
+
+              <label class="color-picker">
+                <span>Stroke color</span>
+                <input type="color" onchange="onSetStrokeColor(this.value)" value="#000000" />
+              </label>
+            </div>
+
+            <input
+              type="text"
+              class="text-input"
+              placeholder="Enter meme text"
+              oninput="onSetLineTxt(this.value)"
+            />
+
+            <button class="btn-share" onclick="onDownloadMeme()">
+              Download
+            </button>
+          </div>
         </div>
       </section>
     </main>

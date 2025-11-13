@@ -1,10 +1,10 @@
 'use strict'
 
 function renderGallery() {
-    const elGallery = document.querySelector('.gallery')
-    const strHTMLs = gImgs.map(img => `
-    <img src="${img.url}" class="gallery-img" onclick="onImgSelect(${img.id})">
-  `)
+    var elGallery = document.querySelector('.gallery')
+    var strHTMLs = gImgs.map(function (img) {
+        return '<img src="' + img.url + '" class="gallery-img" onclick="onImgSelect(' + img.id + ')">'
+    })
     elGallery.innerHTML = strHTMLs.join('')
 }
 
@@ -13,18 +13,14 @@ function onImgSelect(imgId) {
     showEditor()
     renderMeme()
     updateEditorInputs()
-
 }
 
 function showEditor() {
-    document.querySelector('.gallery').style.display = 'none'
-    document.querySelector('.editor').style.display = 'block'
+    document.querySelector('.gallery').classList.add('hidden')
+    document.querySelector('.editor').classList.remove('hidden')
 }
-
 
 function onBackToGallery() {
-    document.querySelector('.editor').style.display = 'none'
-    document.querySelector('.gallery').style.display = 'flex'
+    document.querySelector('.editor').classList.add('hidden')
+    document.querySelector('.gallery').classList.remove('hidden')
 }
-
-
