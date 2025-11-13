@@ -12,6 +12,8 @@ function onImgSelect(imgId) {
     setImg(imgId)
     showEditor()
     renderMeme()
+    updateEditorInputs()
+
 }
 
 function showEditor() {
