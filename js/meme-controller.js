@@ -177,3 +177,9 @@ function onCanvasClick(ev) {
     updateEditorInputs()
     renderMeme()
 }
+
+function onSaveMeme() {
+    saveMemeToStorage()
+    alert('Meme saved!')
+}
+

@@ -22,5 +22,6 @@ function showEditor() {
 
 function onBackToGallery() {
     document.querySelector('.editor').classList.add('hidden')
+    document.querySelector('.saved-memes').classList.add('hidden')
     document.querySelector('.gallery').classList.remove('hidden')
 }

@@ -1,9 +1,18 @@
 'use strict'
 
-var gImgs = [
-    { id: 1, url: 'meme-imgs/meme-imgs (square)/1.jpg', keywords: ['funny', 'cat'] },
-    { id: 2, url: 'meme-imgs/meme-imgs (square)/2.jpg', keywords: ['funny'] }
-]
+var SAVED_MEMES_KEY = 'savedMemes'
+var gImgs = []
+
+function initImgs() {
+    for (var i = 1; i <= 18; i++) {
+        gImgs.push({
+            id: i,
+            url: `meme-imgs/meme-imgs (square)/${i}.jpg`,
+            keywords: []
+        })
+    }
+}
+
 
 var gMeme = {
     selectedImgId: 1,
@@ -111,4 +120,33 @@ function deleteLine() {
 
 function setSelectedLine(idx) {
     gMeme.selectedLineIdx = idx
+}
+
+function saveMemeToStorage() {
+    const memeCopy = JSON.parse(JSON.stringify(gMeme))
+    const imgData = gElCanvas.toDataURL('image/png')
+    memeCopy.savedImg = imgData
+    const memes = loadFromStorage(SAVED_MEMES_KEY) || []
+    memes.push(memeCopy)
+    saveToStorage(SAVED_MEMES_KEY, memes)
+}
+
+
+
+function getSavedMemes() {
+    return loadFromStorage(SAVED_MEMES_KEY) || []
+}
+
+function loadMeme(meme) {
+    gMeme = JSON.parse(JSON.stringify(meme))
+}
+
+function saveToStorage(key, value) {
+    localStorage.setItem(key, JSON.stringify(value))
+}
+
+function loadFromStorage(key) {
+    var str = localStorage.getItem(key)
+    if (!str) return null
+    return JSON.parse(str)
 }
