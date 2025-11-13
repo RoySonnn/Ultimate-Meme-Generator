@@ -1,7 +1,7 @@
 'use strict'
 
 function renderGallery() {
-    var elGallery = document.querySelector('.gallery')
+    var elGallery = document.querySelector('.gallery-grid')
     var strHTMLs = gImgs.map(function (img) {
         return '<img src="' + img.url + '" class="gallery-img" onclick="onImgSelect(' + img.id + ')">'
     })
@@ -17,6 +17,7 @@ function onImgSelect(imgId) {
 
 function showEditor() {
     document.querySelector('.gallery').classList.add('hidden')
+    document.querySelector('.saved-memes').classList.add('hidden')
     document.querySelector('.editor').classList.remove('hidden')
 }
 

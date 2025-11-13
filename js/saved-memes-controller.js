@@ -4,34 +4,30 @@ function onShowSavedMemes() {
     document.querySelector('.gallery').classList.add('hidden')
     document.querySelector('.editor').classList.add('hidden')
     document.querySelector('.saved-memes').classList.remove('hidden')
-
     renderSavedMemes()
 }
 
 function renderSavedMemes() {
     const saved = getSavedMemes()
-    const el = document.querySelector('.saved-memes')
+    const el = document.querySelector('.saved-grid')
 
     if (!saved.length) {
-        el.innerHTML = `
-            <button class="btn-back" onclick="onBackToGallery()">Back to Gallery</button>
-            <p>No saved memes yet.</p>
-        `
+        el.innerHTML = '<p>No saved memes yet.</p>'
         return
     }
 
-    let html = `<button class="btn-back" onclick="onBackToGallery()">Back to Gallery</button>`
+    let html = ''
 
     html += saved
         .map((meme, idx) => {
-            return `
-    <img
-        src="${meme.savedImg}"
-        class="gallery-img"
-        onclick="onLoadSavedMeme(${idx})"
-    >
-`
-
+            const imgSrc = meme.savedImg || getImgById(meme.selectedImgId).url
+            return (
+                '<img src="' +
+                imgSrc +
+                '" class="gallery-img" onclick="onLoadSavedMeme(' +
+                idx +
+                ')">'
+            )
         })
         .join('')
 
@@ -47,4 +43,3 @@ function onLoadSavedMeme(idx) {
     updateEditorInputs()
     renderMeme()
 }
-

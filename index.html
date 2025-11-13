@@ -9,17 +9,64 @@
 
   <body onload="onInit()">
     <header class="header">
-      <div class="logo">Ultimate Meme Generator</div>
-      <button onclick="onShowSavedMemes()">Saved Memes</button>
+      <div class="header-inner">
+        <div class="logo">Ultimate Meme Generator</div>
+
+        <nav class="nav-desktop">
+          <button class="nav-link" onclick="onBackToGallery()">Gallery</button>
+          <button class="nav-link" onclick="onShowSavedMemes()">
+            Saved-Memes
+          </button>
+        </nav>
+
+        <button class="nav-toggle" onclick="openMobileMenu()">☰</button>
+      </div>
     </header>
 
+    <div class="mobile-menu hidden">
+      <div class="mobile-menu-inner">
+        <button class="mobile-close" onclick="closeMobileMenu()">✕</button>
+        <nav class="mobile-nav">
+          <button onclick="onBackToGallery(); closeMobileMenu()">
+            Gallery
+          </button>
+          <button onclick="onShowSavedMemes(); closeMobileMenu()">
+            Saved-Memes
+          </button>
+        </nav>
+      </div>
+    </div>
+
     <main class="main-content">
-      <section class="gallery"></section>
-      <section class="saved-memes hidden">
-        <button class="btn-back" onclick="onBackToGallery()">Back</button>
+      <section class="gallery">
+        <div class="gallery-toolbar">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search"
+            disabled
+          />
+        </div>
+        <div class="gallery-grid"></div>
       </section>
+
+      <section class="saved-memes hidden">
+        <div class="saved-toolbar">
+          <button class="btn-back" onclick="onBackToGallery()">
+            Back to Gallery
+          </button>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search"
+            disabled
+          />
+        </div>
+        <div class="saved-grid"></div>
+      </section>
+
       <section class="editor hidden">
-        <button class="btn-back" onclick="onBackToGallery()">
+        <button class="btn-back inline" onclick="onBackToGallery()">
           Back to Gallery
         </button>
 
@@ -29,11 +76,10 @@
           </div>
 
           <div class="editor-panel">
-            <h2 class="panel-title">Edit Meme</h2>
+            <h2 class="panel-title">Edit Text Lines</h2>
 
             <div class="line-toolbar">
               <span class="line-counter">
-                <span>Text line:</span>
                 <span id="line-index">1</span> /
                 <span id="line-count">1</span>
               </span>
@@ -64,7 +110,7 @@
               <button onclick="onSetAlign('right')">➡️</button>
 
               <label class="color-picker">
-                <span>Text color</span>
+                <span>Text</span>
                 <input
                   type="color"
                   onchange="onSetColor(this.value)"
@@ -73,7 +119,7 @@
               </label>
 
               <label class="color-picker">
-                <span>Stroke color</span>
+                <span>Stroke</span>
                 <input
                   type="color"
                   onchange="onSetStrokeColor(this.value)"
@@ -85,16 +131,21 @@
             <input
               type="text"
               class="text-input"
-              placeholder="Enter meme text"
+              placeholder="Edit text"
               oninput="onSetLineTxt(this.value)"
             />
 
             <div class="emojis-row">
-              <button onclick="onAddSticker('😜')">😜</button>
-              <button onclick="onAddSticker('😍')">😍</button>
+              <button onclick="onAddSticker('🤦‍♂️')">🤦‍♂️</button>
+              <button onclick="onAddSticker('🤬')">🤬</button>
               <button onclick="onAddSticker('😂')">😂</button>
-              <button onclick="onAddSticker('🔥')">🔥</button>
-              <button onclick="onAddSticker('😎')">😎</button>
+              <button onclick="onAddSticker('🤘')">🤘</button>
+              <button onclick="onAddSticker('👑')">👑</button>
+              <button onclick="onAddSticker('❤️')">❤️</button>
+              <button onclick="onAddSticker('😈')">😈</button>
+              <button onclick="onAddSticker('🙏')">🙏</button>
+              <button onclick="onAddSticker('💩')">💩</button>
+              <button onclick="onAddSticker('☝️')">☝️</button>
             </div>
 
             <div class="actions-row">
