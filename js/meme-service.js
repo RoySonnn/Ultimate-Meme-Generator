@@ -7,7 +7,7 @@ function initImgs() {
     for (var i = 1; i <= 18; i++) {
         gImgs.push({
             id: i,
-            url: `meme-imgs/meme-imgs (square)/${i}.jpg`,
+            url: 'meme-imgs/meme-imgs (square)/' + i + '.jpg',
             keywords: []
         })
     }
@@ -20,9 +20,9 @@ var gMeme = {
         {
             txt: 'I sometimes eat Falafel',
             size: 30,
-            color: '#ffffff',
-            strokeColor: '#000000',
-            font: 'Impact',
+            color: '#000000ff',
+            strokeColor: '#ff0000',
+            font: 'Comic Sans MS',
             align: 'center',
             x: 250,
             y: 60
@@ -78,9 +78,9 @@ function addLine() {
     gMeme.lines.push({
         txt: '',
         size: 30,
-        color: '#ffffff',
-        strokeColor: '#000000',
-        font: 'Impact',
+        color: '#000000ff',
+        strokeColor: '#ff0000ff',
+        font: 'Comic Sans MS',
         align: 'center',
         x: x,
         y: y
@@ -89,6 +89,7 @@ function addLine() {
 }
 
 function switchLine() {
+    if (!gMeme.lines.length) return
     gMeme.selectedLineIdx++
     if (gMeme.selectedLineIdx >= gMeme.lines.length) gMeme.selectedLineIdx = 0
 }
@@ -96,14 +97,13 @@ function switchLine() {
 function deleteLine() {
     if (!gMeme.lines.length) return
     gMeme.lines.splice(gMeme.selectedLineIdx, 1)
-
     if (!gMeme.lines.length) {
         gMeme.lines.push({
             txt: '',
             size: 30,
-            color: '#ffffff',
-            strokeColor: '#000000',
-            font: 'Impact',
+            color: '#000000ff',
+            strokeColor: '#ff0000ff',
+            font: 'Comic Sans MS',
             align: 'center',
             x: 250,
             y: 60
@@ -111,7 +111,6 @@ function deleteLine() {
         gMeme.selectedLineIdx = 0
         return
     }
-
     if (gMeme.selectedLineIdx >= gMeme.lines.length) {
         gMeme.selectedLineIdx = gMeme.lines.length - 1
     }
@@ -122,15 +121,16 @@ function setSelectedLine(idx) {
 }
 
 function saveMemeToStorage() {
-    const memeCopy = JSON.parse(JSON.stringify(gMeme))
-    const imgData = gElCanvas.toDataURL('image/png')
-    memeCopy.savedImg = imgData
-    const memes = loadFromStorage(SAVED_MEMES_KEY) || []
+    var memeCopy = JSON.parse(JSON.stringify(gMeme))
+    if (window.gElCanvas) {
+        try {
+            memeCopy.savedImg = gElCanvas.toDataURL('image/png')
+        } catch (e) { }
+    }
+    var memes = loadFromStorage(SAVED_MEMES_KEY) || []
     memes.push(memeCopy)
     saveToStorage(SAVED_MEMES_KEY, memes)
 }
-
-
 
 function getSavedMemes() {
     return loadFromStorage(SAVED_MEMES_KEY) || []
@@ -149,4 +149,3 @@ function loadFromStorage(key) {
     if (!str) return null
     return JSON.parse(str)
 }
-

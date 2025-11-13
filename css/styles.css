@@ -6,8 +6,6 @@
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
   background-color: #e9eaec;
   color: #333;
 }
@@ -34,10 +32,11 @@ button {
 }
 
 .logo {
-  font-family: "Impact", "Arial Black", system-ui;
+  font-family: "Impact", "Arial", sans-serif;
   font-size: 1.6rem;
   color: #ff9100;
   text-shadow: 1px 1px 0 #000;
+  cursor: pointer;
 }
 
 .nav-desktop {
@@ -51,7 +50,6 @@ button {
   border: none;
   font-size: 0.95rem;
   letter-spacing: 0.03em;
-  text-transform: uppercase;
   cursor: pointer;
   color: #777;
 }
@@ -112,7 +110,6 @@ button {
   color: #ffffff;
   font-size: 1.4rem;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   cursor: pointer;
 }
 
@@ -213,6 +210,14 @@ button {
   font-weight: 600;
 }
 
+.text-input {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 0.9rem;
+}
+
 .line-toolbar {
   display: flex;
   align-items: center;
@@ -267,11 +272,17 @@ button {
 .align-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
   flex-wrap: wrap;
-  gap: 0.5rem;
 }
 
-.align-row > button {
+.align-buttons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.align-buttons button {
   border-radius: 6px;
   border: 1px solid #ddd;
   background-color: #f7f7f7;
@@ -279,44 +290,42 @@ button {
   cursor: pointer;
 }
 
-.color-picker {
+.color-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.color-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: #f1f1f1;
+  border: 1px solid #ccc;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  font-size: 0.8rem;
+  justify-content: center;
+  cursor: pointer;
 }
 
-.color-picker input[type="color"] {
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  padding: 0;
-}
-
-.text-input {
-  width: 100%;
-  padding: 0.5rem 0.6rem;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  font-size: 0.9rem;
+.text-color-A,
+.stroke-color-A {
+  font-size: 1.4rem;
 }
 
 .emojis-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem;
+  gap: 4px;
 }
 
 .emojis-row button {
-  width: auto;
-  height: auto;
-  border: none;
+  font-size: 1.4rem;
+  padding: 2px;
   background: none;
-  padding: 0;
-  font-size: 2rem;
+  border: none;
+  cursor: pointer;
 }
-
 
 .actions-row {
   display: flex;

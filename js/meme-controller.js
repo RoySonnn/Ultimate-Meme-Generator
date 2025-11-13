@@ -14,6 +14,8 @@ function initMemeEditor() {
     gElCanvas.addEventListener('mousedown', onDown)
     gElCanvas.addEventListener('mousemove', onMove)
     window.addEventListener('mouseup', onUp)
+
+    syncColorButtonsWithLine()
 }
 
 function renderMeme() {
@@ -30,19 +32,27 @@ function renderMeme() {
         gCtx.drawImage(elImg, 0, 0, gElCanvas.width, gElCanvas.height)
 
         meme.lines.forEach(function (line, idx) {
-            var font = line.font || 'Impact'
-            var align = line.align || 'center'
-            var strokeColor = line.strokeColor || '#000000'
 
-            gCtx.lineWidth = 2
+            var fillColor = line.color || '#000000'
+            var strokeColor = line.strokeColor || '#ff0000'
+            var font = line.font || 'Comic Sans MS'
+            var align = line.align || 'center'
+
+            var stroke = Math.max(1, line.size * 0.05)
+
             gCtx.font = line.size + 'px ' + font
             gCtx.textAlign = align
             gCtx.textBaseline = 'middle'
-            gCtx.fillStyle = line.color
+
+            gCtx.fillStyle = fillColor
             gCtx.strokeStyle = strokeColor
 
-            gCtx.fillText(line.txt, line.x, line.y)
+            gCtx.lineWidth = stroke
+            gCtx.lineJoin = 'round'
+            gCtx.miterLimit = 2
+
             gCtx.strokeText(line.txt, line.x, line.y)
+            gCtx.fillText(line.txt, line.x, line.y)
 
             if (idx === meme.selectedLineIdx) {
                 var rect = getLineRect(line)
@@ -53,23 +63,23 @@ function renderMeme() {
     }
 }
 
+
 function updateEditorInputs() {
     var meme = getMeme()
     var line = meme.lines[meme.selectedLineIdx]
     if (!line) return
 
     var elTextInput = document.querySelector('.text-input')
-    var colorInputs = document.querySelectorAll('.color-picker input[type="color"]')
     var elFontSelect = document.querySelector('.font-row select')
     var elLineIndex = document.querySelector('#line-index')
     var elLineCount = document.querySelector('#line-count')
 
     if (elTextInput) elTextInput.value = line.txt
-    if (colorInputs[0]) colorInputs[0].value = line.color
-    if (colorInputs[1]) colorInputs[1].value = line.strokeColor || '#000000'
     if (elFontSelect) elFontSelect.value = line.font || 'Impact'
     if (elLineIndex) elLineIndex.textContent = meme.selectedLineIdx + 1
     if (elLineCount) elLineCount.textContent = meme.lines.length
+
+    syncColorButtonsWithLine()
 
     if (elTextInput) elTextInput.focus()
 }
@@ -81,12 +91,24 @@ function onSetLineTxt(txt) {
 
 function onSetColor(color) {
     setLineColor(color)
+    var el = document.querySelector('.text-color-A')
+    if (el) el.style.color = color
     renderMeme()
 }
 
 function onSetStrokeColor(color) {
     setStrokeColor(color)
+    var el = document.querySelector('.stroke-color-A')
+    if (el) {
+        el.style.color = '#ffffff'
+        el.style.textShadow =
+            '-0.5px -0.5px ' + color +
+            ', 0.5px -0.5px ' + color +
+            ', -0.5px 0.5px ' + color +
+            ', 0.5px 0.5px ' + color
+    }
     renderMeme()
+
 }
 
 function onSetFont(font) {
@@ -155,7 +177,8 @@ function onDown(ev) {
             gDraggedLineIdx = i
             gIsDragging = true
             gLastPos = { x: offsetX, y: offsetY }
-            gElCanvas.style.cursor = 'grabbing'
+            var elCanvas = gElCanvas
+            if (elCanvas) elCanvas.style.cursor = 'grabbing'
             updateEditorInputs()
             renderMeme()
             return
@@ -183,7 +206,7 @@ function onMove(ev) {
                 break
             }
         }
-        gElCanvas.style.cursor = hovering ? 'grab' : 'default'
+        if (gElCanvas) gElCanvas.style.cursor = hovering ? 'grab' : 'default'
         return
     }
 
@@ -195,7 +218,7 @@ function onMove(ev) {
     line.y += dy
 
     gLastPos = { x: offsetX, y: offsetY }
-    gElCanvas.style.cursor = 'grabbing'
+    if (gElCanvas) gElCanvas.style.cursor = 'grabbing'
     renderMeme()
 }
 
@@ -203,7 +226,7 @@ function onUp() {
     gIsDragging = false
     gDraggedLineIdx = null
     gLastPos = null
-    gElCanvas.style.cursor = 'default'
+    if (gElCanvas) gElCanvas.style.cursor = 'default'
 }
 
 function onSaveMeme() {
@@ -234,4 +257,37 @@ function getLineRect(line) {
         w: width + padding * 2,
         h: height + padding * 2
     }
+}
+
+function syncColorButtonsWithLine() {
+    var meme = getMeme()
+    var line = meme.lines[meme.selectedLineIdx]
+    if (!line) return
+    var textA = document.querySelector('.text-color-A')
+    var strokeA = document.querySelector('.stroke-color-A')
+    var textInput = document.querySelector('.text-color-input')
+    var strokeInput = document.querySelector('.stroke-color-input')
+
+    if (textA) textA.style.color = line.color
+    if (strokeA) {
+        strokeA.style.color = '#ffffff'
+        strokeA.style.textShadow =
+            '-0.5px -0.5px ' + line.strokeColor +
+            ', 0.5px -0.5px ' + line.strokeColor +
+            ', -0.5px 0.5px ' + line.strokeColor +
+            ', 0.5px 0.5px ' + line.strokeColor
+
+    }
+    if (textInput) textInput.value = line.color
+    if (strokeInput) strokeInput.value = line.strokeColor
+}
+
+function openTextColorPicker() {
+    var el = document.querySelector('.text-color-input')
+    if (el) el.click()
+}
+
+function openStrokeColorPicker() {
+    var el = document.querySelector('.stroke-color-input')
+    if (el) el.click()
 }

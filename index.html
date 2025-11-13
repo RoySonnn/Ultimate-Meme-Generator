@@ -10,13 +10,11 @@
   <body onload="onInit()">
     <header class="header">
       <div class="header-inner">
-        <div class="logo">Ultimate Meme Generator</div>
+        <div class="logo" onclick="onBackToGallery()">Ultimate Meme Generator</div>
 
         <nav class="nav-desktop">
           <button class="nav-link" onclick="onBackToGallery()">Gallery</button>
-          <button class="nav-link" onclick="onShowSavedMemes()">
-            Saved-Memes
-          </button>
+          <button class="nav-link" onclick="onShowSavedMemes()">Memes</button>
         </nav>
 
         <button class="nav-toggle" onclick="openMobileMenu()">☰</button>
@@ -30,9 +28,7 @@
           <button onclick="onBackToGallery(); closeMobileMenu()">
             Gallery
           </button>
-          <button onclick="onShowSavedMemes(); closeMobileMenu()">
-            Saved-Memes
-          </button>
+          <button onclick="onShowSavedMemes(); closeMobileMenu()">Memes</button>
         </nav>
       </div>
     </div>
@@ -78,6 +74,13 @@
           <div class="editor-panel">
             <h2 class="panel-title">Edit Text Lines</h2>
 
+            <input
+              type="text"
+              class="text-input"
+              placeholder="Edit text"
+              oninput="onSetLineTxt(this.value)"
+            />
+
             <div class="line-toolbar">
               <span class="line-counter">
                 <span id="line-index">1</span> /
@@ -105,47 +108,55 @@
             </div>
 
             <div class="align-row">
-              <button onclick="onSetAlign('left')">⬅️</button>
-              <button onclick="onSetAlign('center')">=</button>
-              <button onclick="onSetAlign('right')">➡️</button>
+              <div class="align-buttons">
+                <button onclick="onSetAlign('left')">⬅️</button>
+                <button onclick="onSetAlign('center')">=</button>
+                <button onclick="onSetAlign('right')">➡️</button>
+              </div>
 
-              <label class="color-picker">
-                <span>Text</span>
+              <div class="color-row">
+                <button
+                  class="color-btn text-color-btn"
+                  onclick="openTextColorPicker()"
+                >
+                  <span class="text-color-A">A</span>
+                </button>
+
+                <button
+                  class="color-btn stroke-color-btn"
+                  onclick="openStrokeColorPicker()"
+                >
+                  <span class="stroke-color-A">A</span>
+                </button>
+
                 <input
                   type="color"
+                  class="text-color-input"
+                  value="#ff0000"
                   onchange="onSetColor(this.value)"
-                  value="#ffffff"
+                  hidden
                 />
-              </label>
-
-              <label class="color-picker">
-                <span>Stroke</span>
                 <input
                   type="color"
+                  class="stroke-color-input"
+                  value="#ff0000"
                   onchange="onSetStrokeColor(this.value)"
-                  value="#000000"
+                  hidden
                 />
-              </label>
+              </div>
             </div>
-
-            <input
-              type="text"
-              class="text-input"
-              placeholder="Edit text"
-              oninput="onSetLineTxt(this.value)"
-            />
 
             <div class="emojis-row">
               <button onclick="onAddSticker('🤦‍♂️')">🤦‍♂️</button>
               <button onclick="onAddSticker('🤬')">🤬</button>
               <button onclick="onAddSticker('😂')">😂</button>
               <button onclick="onAddSticker('🤘')">🤘</button>
+              <button onclick="onAddSticker('☝️')">☝️</button>
               <button onclick="onAddSticker('👑')">👑</button>
               <button onclick="onAddSticker('❤️')">❤️</button>
               <button onclick="onAddSticker('😈')">😈</button>
               <button onclick="onAddSticker('🙏')">🙏</button>
               <button onclick="onAddSticker('💩')">💩</button>
-              <button onclick="onAddSticker('☝️')">☝️</button>
             </div>
 
             <div class="actions-row">

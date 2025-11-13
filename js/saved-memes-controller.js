@@ -8,29 +8,20 @@ function onShowSavedMemes() {
 }
 
 function renderSavedMemes() {
-    const saved = getSavedMemes()
-    const el = document.querySelector('.saved-grid')
-
+    var saved = getSavedMemes()
+    var el = document.querySelector('.saved-grid')
     if (!saved.length) {
         el.innerHTML = '<p>No saved memes yet.</p>'
         return
     }
-
-    let html = ''
-
-    html += saved
-        .map((meme, idx) => {
-            const imgSrc = meme.savedImg || getImgById(meme.selectedImgId).url
-            return (
-                '<img src="' +
-                imgSrc +
-                '" class="gallery-img" onclick="onLoadSavedMeme(' +
-                idx +
-                ')">'
-            )
-        })
-        .join('')
-
+    var html = saved.map(function (meme, idx) {
+        var src = meme.savedImg
+        if (!src) {
+            var img = getImgById(meme.selectedImgId)
+            if (img) src = img.url
+        }
+        return '<img src="' + src + '" class="gallery-img" onclick="onLoadSavedMeme(' + idx + ')">'
+    }).join('')
     el.innerHTML = html
 }
 

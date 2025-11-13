@@ -4,6 +4,7 @@ function onInit() {
   initImgs()
   renderGallery()
   initMemeEditor()
+  syncColorButtonsWithLine()
 }
 
 function openMobileMenu() {
