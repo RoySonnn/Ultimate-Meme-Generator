@@ -10,7 +10,9 @@
   <body onload="onInit()">
     <header class="header">
       <div class="header-inner">
-        <div class="logo" onclick="onBackToGallery()">Ultimate Meme Generator</div>
+        <div class="logo" onclick="onBackToGallery()">
+          Ultimate Meme Generator
+        </div>
 
         <nav class="nav-desktop">
           <button class="nav-link" onclick="onBackToGallery()">Gallery</button>
@@ -82,67 +84,71 @@
             />
 
             <div class="line-toolbar">
-              <span class="line-counter">
-                <span id="line-index">1</span> /
-                <span id="line-count">1</span>
-              </span>
+              <div class="line-info">
+                <span class="line-label">Text line:</span>
+                <span class="line-counter">
+                  <span id="line-index">1</span> /
+                  <span id="line-count">1</span>
+                </span>
+              </div>
 
               <div class="line-actions">
-                <button onclick="onSwitchLine()">⇅</button>
                 <button onclick="onAddLine()">＋</button>
+                <button onclick="onSwitchLine()">⇅</button>
                 <button onclick="onDeleteLine()">🗑</button>
               </div>
             </div>
 
-            <div class="font-row">
-              <select onchange="onSetFont(this.value)">
-                <option value="Impact">Impact</option>
-                <option value="Arial">Arial</option>
-                <option value="Comic Sans MS">Comic Sans</option>
-              </select>
+            <div class="align-row">
+              <button onclick="onSetAlign('left')">⬅️</button>
+              <button onclick="onSetAlign('center')">=</button>
+              <button onclick="onSetAlign('right')">➡️</button>
+            </div>
+
+            <div class="style-row">
+              <div class="font-wrapper">
+                <button
+                  type="button"
+                  class="btn font-toggle"
+                  onclick="onToggleFontMenu()"
+                >
+                  FONT ⌄
+                </button>
+                <select
+                  class="font-select"
+                  onchange="onFontSelected(this.value)"
+                >
+                  <option value="Comic Sans MS">Comic Sans</option>
+                  <option value="Impact">Impact</option>
+                  <option value="Arial">Arial</option>
+                </select>
+              </div>
 
               <div class="font-size">
                 <button onclick="onChangeFontSize(-2)">A−</button>
                 <button onclick="onChangeFontSize(2)">A＋</button>
               </div>
-            </div>
-
-            <div class="align-row">
-              <div class="align-buttons">
-                <button onclick="onSetAlign('left')">⬅️</button>
-                <button onclick="onSetAlign('center')">=</button>
-                <button onclick="onSetAlign('right')">➡️</button>
-              </div>
 
               <div class="color-row">
-                <button
-                  class="color-btn text-color-btn"
-                  onclick="openTextColorPicker()"
-                >
+                <button class="color-btn text-color-btn" type="button">
                   <span class="text-color-A">A</span>
+                  <input
+                    type="color"
+                    class="text-color-input"
+                    value="#000000"
+                    onchange="onSetColor(this.value)"
+                  />
                 </button>
 
-                <button
-                  class="color-btn stroke-color-btn"
-                  onclick="openStrokeColorPicker()"
-                >
+                <button class="color-btn stroke-color-btn" type="button">
                   <span class="stroke-color-A">A</span>
+                  <input
+                    type="color"
+                    class="stroke-color-input"
+                    value="#ff0000"
+                    onchange="onSetStrokeColor(this.value)"
+                  />
                 </button>
-
-                <input
-                  type="color"
-                  class="text-color-input"
-                  value="#ff0000"
-                  onchange="onSetColor(this.value)"
-                  hidden
-                />
-                <input
-                  type="color"
-                  class="stroke-color-input"
-                  value="#ff0000"
-                  onchange="onSetStrokeColor(this.value)"
-                  hidden
-                />
               </div>
             </div>
 

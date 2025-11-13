@@ -70,19 +70,35 @@ function updateEditorInputs() {
     if (!line) return
 
     var elTextInput = document.querySelector('.text-input')
-    var elFontSelect = document.querySelector('.font-row select')
+    var elTextColor = document.querySelector('.text-color-input')
+    var elStrokeColor = document.querySelector('.stroke-color-input')
+    var elFontSelect = document.querySelector('.font-select')
     var elLineIndex = document.querySelector('#line-index')
     var elLineCount = document.querySelector('#line-count')
+    var elTextA = document.querySelector('.text-color-A')
+    var elStrokeA = document.querySelector('.stroke-color-A')
 
     if (elTextInput) elTextInput.value = line.txt
-    if (elFontSelect) elFontSelect.value = line.font || 'Impact'
+    if (elTextColor) elTextColor.value = line.color || '#000000'
+    if (elStrokeColor) elStrokeColor.value = line.strokeColor || '#ff0000'
+    if (elFontSelect) elFontSelect.value = line.font || 'Comic Sans MS'
     if (elLineIndex) elLineIndex.textContent = meme.selectedLineIdx + 1
     if (elLineCount) elLineCount.textContent = meme.lines.length
 
-    syncColorButtonsWithLine()
+    if (elTextA) elTextA.style.color = line.color || '#000000'
+    if (elStrokeA) {
+        var c = line.strokeColor || '#ff0000'
+        elStrokeA.style.color = '#ffffff'
+        elStrokeA.style.textShadow =
+            '-0.5px -0.5px ' + c +
+            ', 0.5px -0.5px ' + c +
+            ', -0.5px 0.5px ' + c +
+            ', 0.5px 0.5px ' + c
+    }
 
     if (elTextInput) elTextInput.focus()
 }
+
 
 function onSetLineTxt(txt) {
     setLineTxt(txt)
@@ -290,4 +306,21 @@ function openTextColorPicker() {
 function openStrokeColorPicker() {
     var el = document.querySelector('.stroke-color-input')
     if (el) el.click()
+}
+
+function onToggleFontMenu() {
+    var select = document.querySelector('.font-select')
+    if (!select) return
+    if (select.classList.contains('open')) {
+        select.classList.remove('open')
+    } else {
+        select.classList.add('open')
+        select.focus()
+    }
+}
+
+function onFontSelected(font) {
+    var select = document.querySelector('.font-select')
+    if (select) select.classList.remove('open')
+    onSetFont(font)
 }
