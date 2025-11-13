@@ -32,8 +32,8 @@ button {
 }
 
 .logo {
-  font-family: "Impact", "Arial", sans-serif;
-  font-size: 1.6rem;
+  font-family: "Impact", "Arial Black"
+  font-size: 1.4rem;
   color: #ff9100;
   text-shadow: 1px 1px 0 #000;
   cursor: pointer;
@@ -48,8 +48,9 @@ button {
 .nav-link {
   background: none;
   border: none;
-  font-size: 0.95rem;
-  letter-spacing: 0.03em;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   cursor: pointer;
   color: #777;
 }
@@ -110,6 +111,7 @@ button {
   color: #ffffff;
   font-size: 1.4rem;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
   cursor: pointer;
 }
 
@@ -147,13 +149,14 @@ button {
 }
 
 .search-input:disabled {
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 .gallery-grid,
 .saved-grid {
-  column-count: 2;
-  column-gap: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
 }
 
 .gallery-grid img,
@@ -161,7 +164,6 @@ button {
   width: 100%;
   display: block;
   border-radius: 10px;
-  margin-bottom: 0.5rem;
   cursor: pointer;
 }
 
@@ -226,6 +228,12 @@ button {
   font-size: 0.85rem;
 }
 
+.line-info {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
 .line-label {
   color: #666;
 }
@@ -247,18 +255,57 @@ button {
   cursor: pointer;
 }
 
-.font-row {
+.align-row {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  justify-content: flex-start;
+  gap: 0.25rem;
 }
 
-.font-row select {
-  flex: 1;
+.align-row button {
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background-color: #f7f7f7;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+
+.style-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.font-wrapper {
+  position: relative;
+}
+
+.font-toggle {
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background-color: #f7f7f7;
+  padding: 0.25rem 0.8rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.font-select {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin-top: 4px;
+  display: none;
   border-radius: 6px;
   border: 1px solid #ddd;
   padding: 0.35rem 0.5rem;
   font-size: 0.9rem;
+  background: #ffffff;
+  z-index: 5;
+}
+
+.font-select.open {
+  display: block;
 }
 
 .font-size {
@@ -275,60 +322,6 @@ button {
   cursor: pointer;
 }
 
-.align-row {
-  display: flex;
-  justify-content: flex-start;
-  gap: 0.25rem;
-}
-
-.align-row button {
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  background-color: #f7f7f7;
-  padding: 0.25rem 0.5rem;
-  cursor: pointer;
-}
-
-.align-buttons {
-  display: flex;
-  gap: 0.25rem;
-}
-
-.align-buttons button {
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  background-color: #f7f7f7;
-  padding: 0.25rem 0.5rem;
-  cursor: pointer;
-}
-
-.style-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.font-group {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.font-label {
-  font-size: 0.85rem;
-  color: #666;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.font-group select {
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  padding: 0.35rem 0.5rem;
-  font-size: 0.9rem;
-}
-
 .color-row {
   display: flex;
   gap: 8px;
@@ -336,6 +329,7 @@ button {
 }
 
 .color-btn {
+  position: relative;
   width: 32px;
   height: 32px;
   border-radius: 6px;
@@ -344,6 +338,15 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+}
+
+.color-btn input[type="color"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  border: none;
+  padding: 0;
   cursor: pointer;
 }
 
@@ -400,20 +403,21 @@ button {
   display: none !important;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 600px) {
   .gallery-grid,
   .saved-grid {
-    column-count: 3;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 900px) {
+  .gallery-grid,
+  .saved-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1024px) {
-  .editor-layout {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 2rem;
-  }
-
   .nav-desktop {
     display: flex;
   }
@@ -427,13 +431,9 @@ button {
   }
 
   .gallery,
-  .saved-memes {
+  .saved-memes,
+  .editor {
     padding: 1.25rem 1.5rem 1.5rem;
-  }
-
-  .gallery-grid,
-  .saved-grid {
-    column-count: 5;
   }
 
   .editor-layout {
