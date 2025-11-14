@@ -16,6 +16,7 @@ function initImgs() {
 var gMeme = {
     selectedImgId: 1,
     selectedLineIdx: 0,
+    isLineSelected: true,
     lines: [
         {
             txt: 'I sometimes eat Falafel',

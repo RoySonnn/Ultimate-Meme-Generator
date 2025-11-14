@@ -54,11 +54,12 @@ function renderMeme() {
             gCtx.strokeText(line.txt, line.x, line.y)
             gCtx.fillText(line.txt, line.x, line.y)
 
-            if (idx === meme.selectedLineIdx) {
+            if (meme.isLineSelected && idx === meme.selectedLineIdx) {
                 var rect = getLineRect(line)
                 gCtx.strokeStyle = 'blue'
                 gCtx.strokeRect(rect.x, rect.y, rect.w, rect.h)
             }
+
         })
     }
 }
@@ -101,11 +102,13 @@ function updateEditorInputs() {
 
 
 function onSetLineTxt(txt) {
+    gMeme.isLineSelected = true
     setLineTxt(txt)
     renderMeme()
 }
 
 function onSetColor(color) {
+    gMeme.isLineSelected = true
     setLineColor(color)
     var el = document.querySelector('.text-color-A')
     if (el) el.style.color = color
@@ -133,17 +136,23 @@ function onSetFont(font) {
 }
 
 function onSetAlign(align) {
+    gMeme.isLineSelected = true
     setAlign(align)
     renderMeme()
 }
 
 function onDownloadMeme() {
-    if (!gElCanvas) return
-    var link = document.createElement('a')
-    link.download = 'meme.png'
-    link.href = gElCanvas.toDataURL('image/png')
-    link.click()
+    gMeme.isLineSelected = false
+    renderMeme()
+
+    setTimeout(() => {
+        var link = document.createElement('a')
+        link.download = 'meme.png'
+        link.href = gElCanvas.toDataURL('image/png')
+        link.click()
+    }, 30)
 }
+
 
 function onChangeFontSize(diff) {
     changeFontSize(diff)
@@ -151,12 +160,14 @@ function onChangeFontSize(diff) {
 }
 
 function onAddLine() {
+    gMeme.isLineSelected = true
     addLine()
     updateEditorInputs()
     renderMeme()
 }
 
 function onSwitchLine() {
+    gMeme.isLineSelected = true
     switchLine()
     updateEditorInputs()
     renderMeme()
@@ -176,6 +187,8 @@ function onAddSticker(emoji) {
 }
 
 function onDown(ev) {
+    gMeme.isLineSelected = false
+    renderMeme()
     var offsetX = ev.offsetX
     var offsetY = ev.offsetY
     var meme = getMeme()
@@ -189,12 +202,12 @@ function onDown(ev) {
             offsetY >= rect.y &&
             offsetY <= rect.y + rect.h
         ) {
+            gMeme.isLineSelected = true
             setSelectedLine(i)
             gDraggedLineIdx = i
             gIsDragging = true
             gLastPos = { x: offsetX, y: offsetY }
-            var elCanvas = gElCanvas
-            if (elCanvas) elCanvas.style.cursor = 'grabbing'
+            if (gElCanvas) gElCanvas.style.cursor = 'grabbing'
             updateEditorInputs()
             renderMeme()
             return
@@ -246,9 +259,14 @@ function onUp() {
 }
 
 function onSaveMeme() {
-    saveMemeToStorage()
-    alert('Meme saved!')
+    gMeme.isLineSelected = false
+    renderMeme()
+    setTimeout(() => {
+        saveMemeToStorage()
+        alert('Meme saved!')
+    }, 30)
 }
+
 
 function getLineRect(line) {
     var font = line.font || 'Impact'
