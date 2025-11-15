@@ -105,6 +105,19 @@
               </button>
             </div>
 
+            <div class="tag-row">
+              <div class="tag-list"></div>
+              <button class="tag-custom-btn" onclick="onShowTagInput()">
+                Custom
+              </button>
+              <input
+                type="text"
+                class="tag-input hidden"
+                placeholder="Add tag"
+                onkeydown="onTagInputKey(event)"
+              />
+            </div>
+
             <input
               type="text"
               class="text-input"

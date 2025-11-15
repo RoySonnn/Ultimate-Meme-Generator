@@ -15,7 +15,10 @@ function onImgSelect(imgId) {
     renderMeme()
     updateEditorInputs()
     updateSaveCopyVisibility()
+    renderTags()
 }
+
+
 
 
 function showEditor() {

@@ -26,7 +26,9 @@ function initMemeEditor() {
 
     syncColorButtonsWithLine()
     updateEditorInputs()
+    renderTags()
 }
+
 
 function renderMeme() {
     var meme = getMeme()
@@ -449,3 +451,94 @@ window.addEventListener('click', function (ev) {
     if (toggle.contains(ev.target)) return
     box.classList.add('hidden')
 })
+
+
+
+function onShowCustomTagInput() {
+    var elInput = document.querySelector('.tag-input')
+    elInput.classList.remove('hidden')
+    elInput.focus()
+}
+
+function onAddCustomTag(keyword) {
+    if (!keyword.trim()) return
+
+    var meme = getMeme()
+    addKeywordToImg(meme.selectedImgId, keyword)
+
+    var elInput = document.querySelector('.tag-input')
+    elInput.value = ''
+    elInput.classList.add('hidden')
+
+    renderTags()
+}
+
+
+function renderTags() {
+    var meme = getMeme()
+    var img = getImgById(meme.selectedImgId)
+    var elList = document.querySelector('.tag-list')
+    if (!elList || !img) return
+
+    elList.innerHTML = img.keywords.map(function (tag, idx) {
+        return (
+            '<div class="tag-item">' +
+            '<span>' + tag + '</span>' +
+            '<button class="tag-remove-btn" onclick="onDeleteTag(' + idx + ')">✕</button>' +
+            '</div>'
+        )
+    }).join('')
+}
+
+function onShowTagInput() {
+    var elInput = document.querySelector('.tag-input')
+    if (!elInput) return
+    elInput.classList.remove('hidden')
+    elInput.focus()
+}
+
+function onTagInputKey(ev) {
+    if (ev.key !== 'Enter') return
+    var elInput = ev.target
+    var txt = elInput.value.trim()
+    if (!txt) return
+
+    var meme = getMeme()
+    addTagToImg(meme.selectedImgId, txt)
+
+    elInput.value = ''
+    elInput.classList.add('hidden')
+    renderTags()
+}
+
+
+function onDeleteTag(idx) {
+    var meme = getMeme()
+    var keywords = getKeywordsForImg(meme.selectedImgId)
+    if (!keywords || idx < 0 || idx >= keywords.length) return
+    var tag = keywords[idx]
+
+    deleteTagFromImg(meme.selectedImgId, tag)
+    renderTags()
+}
+
+
+window.addEventListener('click', function (ev) {
+    var input = document.querySelector('.tag-input')
+    var btn = document.querySelector('.tag-custom-btn')
+
+    if (!input || input.classList.contains('hidden')) return
+
+    if (input.contains(ev.target) || btn.contains(ev.target)) return
+
+    var txt = input.value.trim()
+    if (txt) {
+        var meme = getMeme()
+        addTagToImg(meme.selectedImgId, txt)
+        renderTags()
+    }
+
+    input.value = ''
+    input.classList.add('hidden')
+})
+

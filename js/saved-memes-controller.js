@@ -35,7 +35,6 @@ function renderSavedMemes() {
 }
 
 
-
 function onLoadSavedMeme(idx) {
     var saved = getSavedMemes()
     var meme = saved[idx]
@@ -45,7 +44,9 @@ function onLoadSavedMeme(idx) {
     updateEditorInputs()
     updateSaveCopyVisibility()
     renderMeme()
+    renderTags()
 }
+
 
 
 function onDeleteSavedMeme(idx) {
@@ -54,4 +55,11 @@ function onDeleteSavedMeme(idx) {
     memes.splice(idx, 1)
     saveToStorage('savedMemes', memes)
     renderSavedMemes()
+}
+
+
+function saveKeywordsToStorage() {
+    var map = {}
+    gImgs.forEach(img => map[img.id] = img.keywords)
+    saveToStorage(IMG_KEYWORDS_KEY, map)
 }
