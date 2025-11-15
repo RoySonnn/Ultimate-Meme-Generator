@@ -29,7 +29,6 @@ function initMemeEditor() {
     renderTags()
 }
 
-
 function renderMeme() {
     var meme = getMeme()
     var img = getImgById(meme.selectedImgId)
@@ -37,11 +36,27 @@ function renderMeme() {
 
     var elImg = new Image()
     elImg.src = img.url
+
     elImg.onload = function () {
         gElCanvas.width = elImg.width
         gElCanvas.height = elImg.height
         gCtx.clearRect(0, 0, gElCanvas.width, gElCanvas.height)
         gCtx.drawImage(elImg, 0, 0, gElCanvas.width, gElCanvas.height)
+
+
+
+        meme.lines.forEach(line => {
+            if (!line.__fixed) {
+                line.x = gElCanvas.width / 2
+
+                if (line.y === 80 || line.y === undefined || line.y === null) {
+                    line.y = gElCanvas.height * 0.12
+                }
+
+                line.__fixed = true
+            }
+        })
+
 
         meme.lines.forEach(function (line, idx) {
             var fillColor = line.color || '#ff0000'
@@ -50,21 +65,12 @@ function renderMeme() {
             var align = line.align || 'center'
             var stroke = Math.max(1, line.size * 0.05)
 
-            if (typeof line.x !== 'number') {
-                line.x = gElCanvas.width / 2
-            }
-            if (typeof line.y !== 'number') {
-                line.y = 80 + idx * 60
-            }
-
             gCtx.font = line.size + 'px ' + font
             gCtx.textAlign = align
             gCtx.textBaseline = 'middle'
             gCtx.fillStyle = fillColor
             gCtx.strokeStyle = strokeColor
             gCtx.lineWidth = stroke
-            gCtx.lineJoin = 'round'
-            gCtx.miterLimit = 2
 
             gCtx.strokeText(line.txt, line.x, line.y)
             gCtx.fillText(line.txt, line.x, line.y)
@@ -80,6 +86,14 @@ function renderMeme() {
 
 function updateEditorInputs() {
     var meme = getMeme()
+
+    if (meme.lines.length === 0) {
+        document.querySelector('.text-input').value = ''
+        document.querySelector('#line-index').textContent = '0'
+        document.querySelector('#line-count').textContent = '0'
+        return
+    }
+
     var line = meme.lines[meme.selectedLineIdx]
     if (!line) return
 
@@ -93,7 +107,10 @@ function updateEditorInputs() {
     if (elTextInput) {
         elTextInput.value = line.txt
         elTextInput.focus()
-        elTextInput.setSelectionRange(elTextInput.value.length, elTextInput.value.length)
+        elTextInput.setSelectionRange(
+            elTextInput.value.length,
+            elTextInput.value.length
+        )
     }
     if (elTextColor) elTextColor.value = line.color || '#ff0000'
     if (elStrokeColor) elStrokeColor.value = line.strokeColor || '#000000'
@@ -104,6 +121,7 @@ function updateEditorInputs() {
     syncColorButtonsWithLine()
     updateSaveCopyVisibility()
 }
+
 
 function onSetLineTxt(txt) {
     var meme = getMeme()
@@ -142,7 +160,6 @@ function onFontSelected(font) {
     updateEditorInputs()
     renderMeme()
 }
-
 
 function onChangeFontSize(diff) {
     changeFontSize(diff)
@@ -410,7 +427,6 @@ function onCenterLine() {
     renderMeme()
 }
 
-
 function toggleEmojiBox() {
     var el = document.querySelector('.emoji-box')
     if (!el) return
@@ -418,16 +434,25 @@ function toggleEmojiBox() {
 }
 
 function resetMemeToDefault() {
-    resetMemeDataToInitial()
-    var meme = getMeme()
-    var line = meme.lines[0]
+    var currentId = getMeme().selectedImgId || 1
+
+    gMeme = createInitialMeme()
+    gMeme.selectedImgId = currentId
+
+    var line = gMeme.lines[0]
+
     line.color = gEditorDefaults.color
     line.strokeColor = gEditorDefaults.strokeColor
     line.font = gEditorDefaults.font
     line.size = gEditorDefaults.size
-    meme.selectedLineIdx = 0
-    meme.isLineSelected = true
+
+    line.x = gElCanvas ? gElCanvas.width / 2 : 250
+    line.y = 80
+
+    gMeme.selectedLineIdx = 0
+    gMeme.isLineSelected = true
 }
+
 
 function applyEditorDefaults() {
     var meme = getMeme()
@@ -448,31 +473,9 @@ window.addEventListener('click', function (ev) {
     var toggle = document.querySelector('.emoji-toggle')
     if (!box || box.classList.contains('hidden')) return
     if (box.contains(ev.target)) return
-    if (toggle.contains(ev.target)) return
+    if (toggle && toggle.contains(ev.target)) return
     box.classList.add('hidden')
 })
-
-
-
-function onShowCustomTagInput() {
-    var elInput = document.querySelector('.tag-input')
-    elInput.classList.remove('hidden')
-    elInput.focus()
-}
-
-function onAddCustomTag(keyword) {
-    if (!keyword.trim()) return
-
-    var meme = getMeme()
-    addKeywordToImg(meme.selectedImgId, keyword)
-
-    var elInput = document.querySelector('.tag-input')
-    elInput.value = ''
-    elInput.classList.add('hidden')
-
-    renderTags()
-}
-
 
 function renderTags() {
     var meme = getMeme()
@@ -491,7 +494,7 @@ function renderTags() {
 }
 
 function onShowTagInput() {
-    var elInput = document.querySelector('.tag-input')
+    var elInput = document.querySelector('.tag-editor-input')
     if (!elInput) return
     elInput.classList.remove('hidden')
     elInput.focus()
@@ -511,7 +514,6 @@ function onTagInputKey(ev) {
     renderTags()
 }
 
-
 function onDeleteTag(idx) {
     var meme = getMeme()
     var keywords = getKeywordsForImg(meme.selectedImgId)
@@ -522,14 +524,13 @@ function onDeleteTag(idx) {
     renderTags()
 }
 
-
 window.addEventListener('click', function (ev) {
-    var input = document.querySelector('.tag-input')
+    var input = document.querySelector('.tag-editor-input')
     var btn = document.querySelector('.tag-custom-btn')
 
     if (!input || input.classList.contains('hidden')) return
 
-    if (input.contains(ev.target) || btn.contains(ev.target)) return
+    if (input.contains(ev.target) || (btn && btn.contains(ev.target))) return
 
     var txt = input.value.trim()
     if (txt) {
@@ -541,4 +542,3 @@ window.addEventListener('click', function (ev) {
     input.value = ''
     input.classList.add('hidden')
 })
-

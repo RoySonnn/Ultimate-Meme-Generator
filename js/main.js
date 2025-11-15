@@ -5,17 +5,12 @@ var gLastScreen = 'gallery'
 function onInit() {
   initImgs()
   renderGallery()
+  renderTagOptions()
   initMemeEditor()
-  syncColorButtonsWithLine()
 
-  document.querySelector('.gallery .search-input')
-    .addEventListener('input', onSearch)
-
-  document.querySelector('.saved-memes .search-input')
-    .addEventListener('input', onSearchSaved)
-
+  var savedSearch = document.querySelector('.saved-memes .search-input')
+  if (savedSearch) savedSearch.addEventListener('input', onSearchSaved)
 }
-
 
 function openMobileMenu() {
   var el = document.querySelector('.mobile-menu')
@@ -27,8 +22,14 @@ function closeMobileMenu() {
   if (el) el.classList.add('hidden')
 }
 
-
 function clearAllSearchInputs() {
-  var searchInputs = document.querySelectorAll('.search-input')
-  searchInputs.forEach(input => input.value = '')
+  document.querySelectorAll('.search-input')
+    .forEach(input => input.value = '')
+
+  var tagInput = document.querySelector('.tag-search-input')
+  if (tagInput) tagInput.value = ''
+
+  var dropdown = document.querySelector('.tag-dropdown')
+  if (dropdown) dropdown.classList.add('hidden')
 }
+

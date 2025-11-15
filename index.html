@@ -37,8 +37,23 @@
     <main class="main-content">
       <section class="gallery">
         <div class="gallery-toolbar">
-          <input type="text" class="search-input" placeholder="Search" />
+          <div class="tag-search">
+            <div class="selected-tags"></div>
+
+            <input
+              type="text"
+              class="tag-input tag-search-input"
+              placeholder="Search tags..."
+              oninput="onLiveTagSearch(this.value)"
+              onclick="onToggleTagDropdown()"
+            />
+
+            <div class="tag-dropdown hidden">
+              <ul class="tag-options"></ul>
+            </div>
+          </div>
         </div>
+
         <div class="gallery-grid"></div>
       </section>
 
@@ -58,10 +73,12 @@
           <div class="canvas-wrapper">
             <canvas id="meme-canvas"></canvas>
           </div>
+
           <div class="editor-panel">
             <div class="editor-header">
               <h2>
-                Edit Text Lines:<span id="line-index">1</span> /
+                Edit Text Lines:
+                <span id="line-index">1</span> /
                 <span id="line-count">1</span>
               </h2>
 
@@ -142,12 +159,14 @@
 
             <div class="tag-row">
               <div class="tag-list"></div>
+
               <button class="tag-custom-btn" onclick="onShowTagInput()">
                 Custom tag +
               </button>
+
               <input
                 type="text"
-                class="tag-input hidden"
+                class="tag-editor-input hidden"
                 placeholder="Add tag"
                 onkeydown="onTagInputKey(event)"
               />

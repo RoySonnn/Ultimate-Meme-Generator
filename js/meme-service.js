@@ -2,10 +2,9 @@
 
 var SAVED_MEMES_KEY = 'savedMemes'
 var IMG_KEYWORDS_KEY = 'imgKeywords'
-
 var gImgs = []
 var gMeme = createInitialMeme()
-
+var gKeywordSearchCountMap = {}
 
 function createInitialMeme() {
     return {
@@ -28,7 +27,6 @@ function createInitialMeme() {
     }
 }
 
-
 var gDefaultKeywords = {
     1: ['funny', 'baby'],
     2: ['cat'],
@@ -50,30 +48,27 @@ var gDefaultKeywords = {
     18: ['angry']
 }
 
-
 function initImgs() {
     var stored = loadFromStorage(IMG_KEYWORDS_KEY) || {}
     gImgs = []
+    gKeywordSearchCountMap = {}
 
     for (var i = 1; i <= 18; i++) {
-        var defaultTags = gDefaultKeywords[i] ? [...gDefaultKeywords[i]] : []
-        var storedTags = stored[i] || []
-
+        var tags = stored[i] && stored[i].length ? stored[i] : gDefaultKeywords[i] || []
         gImgs.push({
             id: i,
             url: 'meme-imgs/meme-imgs (square)/' + i + '.jpg',
-            keywords: storedTags.length ? storedTags : defaultTags
+            keywords: [...tags]
         })
+        tags.forEach(tag => gKeywordSearchCountMap[tag] = true)
     }
 }
-
 
 function saveKeywordsToStorage() {
     var db = {}
     gImgs.forEach(img => db[img.id] = img.keywords)
     saveToStorage(IMG_KEYWORDS_KEY, db)
 }
-
 
 function getMeme() {
     return gMeme
@@ -88,27 +83,22 @@ function getKeywordsForImg(imgId) {
     return img ? img.keywords : []
 }
 
-
 function setImg(id) {
     gMeme.selectedImgId = id
     gMeme.savedIdx = -1
 }
 
 function setSelectedLine(idx) {
-    var meme = getMeme()
-    if (!meme.lines || idx < 0 || idx >= meme.lines.length) return
-    meme.selectedLineIdx = idx
-    meme.isLineSelected = true
+    if (idx < 0 || idx >= gMeme.lines.length) return
+    gMeme.selectedLineIdx = idx
+    gMeme.isLineSelected = true
 }
-
 
 function addTagToImg(imgId, tag) {
     tag = tag.trim().toLowerCase()
     if (!tag) return
-
     var img = getImgById(imgId)
     if (!img) return
-
     if (!img.keywords.includes(tag)) {
         img.keywords.push(tag)
         saveKeywordsToStorage()
@@ -118,11 +108,9 @@ function addTagToImg(imgId, tag) {
 function deleteTagFromImg(imgId, tag) {
     var img = getImgById(imgId)
     if (!img) return
-
     img.keywords = img.keywords.filter(t => t !== tag)
     saveKeywordsToStorage()
 }
-
 
 function setLineTxt(txt) {
     gMeme.lines[gMeme.selectedLineIdx].txt = txt
@@ -142,13 +130,11 @@ function setFont(font) {
 
 function changeFontSize(diff) {
     var line = gMeme.lines[gMeme.selectedLineIdx]
-    if (!line) return
     line.size += diff
     if (line.size < 8) line.size = 8
 }
 
 function addLine() {
-    var x = 250
     var y = gMeme.lines.length === 0 ? 80 :
         gMeme.lines.length === 1 ? 420 : 250
 
@@ -159,7 +145,7 @@ function addLine() {
         strokeColor: '#000000',
         font: 'Arial',
         align: 'center',
-        x,
+        x: 250,
         y
     })
 
@@ -168,33 +154,17 @@ function addLine() {
 }
 
 function switchLine() {
-    if (!gMeme.lines.length) return
     gMeme.selectedLineIdx++
-    if (gMeme.selectedLineIdx >= gMeme.lines.length) {
-        gMeme.selectedLineIdx = 0
-    }
+    if (gMeme.selectedLineIdx >= gMeme.lines.length) gMeme.selectedLineIdx = 0
     gMeme.isLineSelected = true
 }
 
 function deleteLine() {
-    if (!gMeme.lines.length) return
-
     gMeme.lines.splice(gMeme.selectedLineIdx, 1)
 
-    if (!gMeme.lines.length) {
-        gMeme.lines.push({
-            txt: '',
-            size: 22,
-            color: '#ff0000',
-            strokeColor: '#000000',
-            font: 'Arial',
-            align: 'center',
-            x: 250,
-            y: 80
-        })
-
-        gMeme.selectedLineIdx = 0
-        gMeme.isLineSelected = true
+    if (gMeme.lines.length === 0) {
+        gMeme.selectedLineIdx = -1
+        gMeme.isLineSelected = false
         return
     }
 
@@ -206,43 +176,25 @@ function deleteLine() {
 }
 
 
+
 function saveMemeToStorage() {
     var meme = JSON.parse(JSON.stringify(gMeme))
-
-    if (window.gElCanvas) {
-        try {
-            meme.savedImg = gElCanvas.toDataURL('image/png')
-        } catch (e) { }
-    }
-
+    meme.savedImg = gElCanvas.toDataURL('image/png')
     var memes = loadFromStorage(SAVED_MEMES_KEY) || []
     var idx = memes.length
-
     meme.savedIdx = idx
     gMeme.savedIdx = idx
-
     memes.push(meme)
     saveToStorage(SAVED_MEMES_KEY, memes)
 }
 
 function overwriteSavedMeme(idx) {
     var memes = loadFromStorage(SAVED_MEMES_KEY) || []
-    if (idx < 0 || idx >= memes.length) {
-        saveMemeToStorage()
-        return
-    }
-
+    if (idx < 0 || idx >= memes.length) return saveMemeToStorage()
     var meme = JSON.parse(JSON.stringify(gMeme))
-
-    if (window.gElCanvas) {
-        try {
-            meme.savedImg = gElCanvas.toDataURL('image/png')
-        } catch (e) { }
-    }
-
+    meme.savedImg = gElCanvas.toDataURL('image/png')
     meme.savedIdx = idx
     gMeme.savedIdx = idx
-
     memes[idx] = meme
     saveToStorage(SAVED_MEMES_KEY, memes)
 }
@@ -253,28 +205,12 @@ function getSavedMemes() {
 
 function loadMeme(meme) {
     gMeme = JSON.parse(JSON.stringify(meme))
-    if (typeof gMeme.savedIdx !== 'number') gMeme.savedIdx = -1
-    if (!gMeme.lines.length) {
-        gMeme.lines = createInitialMeme().lines
-        gMeme.selectedLineIdx = 0
-    }
 }
-
-
-function resetMemeDataToInitial() {
-    var id = gMeme.selectedImgId || 1
-    gMeme = createInitialMeme()
-    gMeme.selectedImgId = id
-}
-
 
 function saveToStorage(key, val) {
     localStorage.setItem(key, JSON.stringify(val))
 }
 
 function loadFromStorage(key) {
-    var str = localStorage.getItem(key)
-    if (!str) return null
-    return JSON.parse(str)
+    return JSON.parse(localStorage.getItem(key))
 }
-
