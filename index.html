@@ -112,11 +112,15 @@
             </div>
 
             <div class="toolbar-row">
-              <button onclick="onSetAlign('left')">⬅️</button>
-              <button onclick="onSetAlign('center')">=</button>
-              <button onclick="onSetAlign('right')">➡️</button>
-              <button onclick="onMoveLineUp()">🔼</button>
-              <button onclick="onMoveLineDown()">🔽</button>
+              <div class="move-pad">
+                <button onclick="onMoveUp()">⬆️</button>
+                <div class="move-middle-row">
+                  <button onclick="onMoveLeft()">⬅️</button>
+                  <button class="move-center">●</button>
+                  <button onclick="onMoveRight()">➡️</button>
+                </div>
+                <button onclick="onMoveDown()">⬇️</button>
+              </div>
             </div>
 
             <div class="toolbar-row">

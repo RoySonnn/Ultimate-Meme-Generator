@@ -6,6 +6,8 @@ var gIsDragging = false
 var gDraggedLineIdx = null
 var gLastPos = null
 
+const MOVE_DELTA = 5
+
 function initMemeEditor() {
     gElCanvas = document.querySelector('#meme-canvas')
     if (!gElCanvas) return
@@ -33,21 +35,17 @@ function renderMeme() {
         gCtx.drawImage(elImg, 0, 0, gElCanvas.width, gElCanvas.height)
 
         meme.lines.forEach(function (line, idx) {
-
             var fillColor = line.color || '#000000'
             var strokeColor = line.strokeColor || '#ff0000'
-            var font = line.font || 'Comic Sans MS'
+            var font = line.font || 'Arial'
             var align = line.align || 'center'
-
             var stroke = Math.max(1, line.size * 0.05)
 
             gCtx.font = line.size + 'px ' + font
             gCtx.textAlign = align
             gCtx.textBaseline = 'middle'
-
             gCtx.fillStyle = fillColor
             gCtx.strokeStyle = strokeColor
-
             gCtx.lineWidth = stroke
             gCtx.lineJoin = 'round'
             gCtx.miterLimit = 2
@@ -60,7 +58,6 @@ function renderMeme() {
                 gCtx.strokeStyle = 'blue'
                 gCtx.strokeRect(rect.x, rect.y, rect.w, rect.h)
             }
-
         })
     }
 }
@@ -97,7 +94,6 @@ function updateEditorInputs() {
             ', 0.5px 0.5px ' + c
     }
 
-    if (elTextInput) elTextInput.focus()
     updateSaveCopyVisibility()
 }
 
@@ -143,7 +139,6 @@ function onSetAlign(align) {
 function onDownloadMeme() {
     gMeme.isLineSelected = false
     renderMeme()
-
     setTimeout(function () {
         var link = document.createElement('a')
         link.download = 'meme.png'
@@ -205,7 +200,7 @@ function onDown(ev) {
             gDraggedLineIdx = i
             gIsDragging = true
             gLastPos = { x: offsetX, y: offsetY }
-            if (gElCanvas) gElCanvas.style.cursor = 'grabbing'
+            gElCanvas.style.cursor = 'grabbing'
             updateEditorInputs()
             renderMeme()
             return
@@ -233,7 +228,7 @@ function onMove(ev) {
                 break
             }
         }
-        if (gElCanvas) gElCanvas.style.cursor = hovering ? 'grab' : 'default'
+        gElCanvas.style.cursor = hovering ? 'grab' : 'default'
         return
     }
 
@@ -245,7 +240,7 @@ function onMove(ev) {
     line.y += dy
 
     gLastPos = { x: offsetX, y: offsetY }
-    if (gElCanvas) gElCanvas.style.cursor = 'grabbing'
+    gElCanvas.style.cursor = 'grabbing'
     renderMeme()
 }
 
@@ -253,8 +248,9 @@ function onUp() {
     gIsDragging = false
     gDraggedLineIdx = null
     gLastPos = null
-    if (gElCanvas) gElCanvas.style.cursor = 'default'
+    gElCanvas.style.cursor = 'default'
 }
+
 
 function onSaveMeme() {
     gMeme.isLineSelected = false
@@ -278,8 +274,9 @@ function onSaveMemeCopy() {
     }, 30)
 }
 
+
 function getLineRect(line) {
-    var font = line.font || 'Impact'
+    var font = line.font || 'Arial'
     var align = line.align || 'center'
     gCtx.font = line.size + 'px ' + font
     gCtx.textAlign = align
@@ -303,10 +300,12 @@ function getLineRect(line) {
     }
 }
 
+
 function syncColorButtonsWithLine() {
     var meme = getMeme()
     var line = meme.lines[meme.selectedLineIdx]
     if (!line) return
+
     var textA = document.querySelector('.text-color-A')
     var strokeA = document.querySelector('.stroke-color-A')
     var textInput = document.querySelector('.text-color-input')
@@ -335,6 +334,7 @@ function openStrokeColorPicker() {
     if (el) el.click()
 }
 
+
 function onFontSelected(font) {
     onSetFont(font)
 }
@@ -348,4 +348,29 @@ function updateSaveCopyVisibility() {
     } else {
         btn.classList.add('hidden')
     }
+}
+
+
+function onMoveUp() {
+    var line = gMeme.lines[gMeme.selectedLineIdx]
+    line.y -= MOVE_DELTA
+    renderMeme()
+}
+
+function onMoveDown() {
+    var line = gMeme.lines[gMeme.selectedLineIdx]
+    line.y += MOVE_DELTA
+    renderMeme()
+}
+
+function onMoveLeft() {
+    var line = gMeme.lines[gMeme.selectedLineIdx]
+    line.x -= MOVE_DELTA
+    renderMeme()
+}
+
+function onMoveRight() {
+    var line = gMeme.lines[gMeme.selectedLineIdx]
+    line.x += MOVE_DELTA
+    renderMeme()
 }
