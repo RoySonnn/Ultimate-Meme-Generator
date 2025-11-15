@@ -6,7 +6,14 @@ var gIsDragging = false
 var gDraggedLineIdx = null
 var gLastPos = null
 
-const MOVE_DELTA = 5
+var MOVE_DELTA = 5
+
+var gEditorDefaults = {
+    color: '#ff0000',
+    strokeColor: '#000000',
+    font: 'Arial',
+    size: 22
+}
 
 function initMemeEditor() {
     gElCanvas = document.querySelector('#meme-canvas')
@@ -18,7 +25,7 @@ function initMemeEditor() {
     window.addEventListener('mouseup', onUp)
 
     syncColorButtonsWithLine()
-    updateSaveCopyVisibility()
+    updateEditorInputs()
 }
 
 function renderMeme() {
@@ -35,11 +42,18 @@ function renderMeme() {
         gCtx.drawImage(elImg, 0, 0, gElCanvas.width, gElCanvas.height)
 
         meme.lines.forEach(function (line, idx) {
-            var fillColor = line.color || '#000000'
-            var strokeColor = line.strokeColor || '#ff0000'
+            var fillColor = line.color || '#ff0000'
+            var strokeColor = line.strokeColor || '#000000'
             var font = line.font || 'Arial'
             var align = line.align || 'center'
             var stroke = Math.max(1, line.size * 0.05)
+
+            if (typeof line.x !== 'number') {
+                line.x = gElCanvas.width / 2
+            }
+            if (typeof line.y !== 'number') {
+                line.y = 80 + idx * 60
+            }
 
             gCtx.font = line.size + 'px ' + font
             gCtx.textAlign = align
@@ -55,7 +69,7 @@ function renderMeme() {
 
             if (meme.isLineSelected && idx === meme.selectedLineIdx) {
                 var rect = getLineRect(line)
-                gCtx.strokeStyle = 'blue'
+                gCtx.strokeStyle = '#3295f9'
                 gCtx.strokeRect(rect.x, rect.y, rect.w, rect.h)
             }
         })
@@ -73,94 +87,104 @@ function updateEditorInputs() {
     var elFontSelect = document.querySelector('.font-select')
     var elLineIndex = document.querySelector('#line-index')
     var elLineCount = document.querySelector('#line-count')
-    var elTextA = document.querySelector('.text-color-A')
-    var elStrokeA = document.querySelector('.stroke-color-A')
 
-    if (elTextInput) elTextInput.value = line.txt
-    if (elTextColor) elTextColor.value = line.color || '#000000'
-    if (elStrokeColor) elStrokeColor.value = line.strokeColor || '#ff0000'
+    if (elTextInput) {
+        elTextInput.value = line.txt
+        elTextInput.focus()
+        elTextInput.setSelectionRange(elTextInput.value.length, elTextInput.value.length)
+    }
+    if (elTextColor) elTextColor.value = line.color || '#ff0000'
+    if (elStrokeColor) elStrokeColor.value = line.strokeColor || '#000000'
     if (elFontSelect) elFontSelect.value = line.font || 'Arial'
     if (elLineIndex) elLineIndex.textContent = meme.selectedLineIdx + 1
     if (elLineCount) elLineCount.textContent = meme.lines.length
 
-    if (elTextA) elTextA.style.color = line.color || '#000000'
-    if (elStrokeA) {
-        var c = line.strokeColor || '#ff0000'
-        elStrokeA.style.color = '#ffffff'
-        elStrokeA.style.textShadow =
-            '-0.5px -0.5px ' + c +
-            ', 0.5px -0.5px ' + c +
-            ', -0.5px 0.5px ' + c +
-            ', 0.5px 0.5px ' + c
-    }
-
+    syncColorButtonsWithLine()
     updateSaveCopyVisibility()
 }
 
 function onSetLineTxt(txt) {
-    gMeme.isLineSelected = true
+    var meme = getMeme()
+    meme.isLineSelected = true
     setLineTxt(txt)
     renderMeme()
 }
 
 function onSetColor(color) {
-    gMeme.isLineSelected = true
+    var meme = getMeme()
+    meme.isLineSelected = true
     setLineColor(color)
-    var el = document.querySelector('.text-color-A')
-    if (el) el.style.color = color
+    gEditorDefaults.color = color
+    syncColorButtonsWithLine()
     renderMeme()
 }
 
 function onSetStrokeColor(color) {
     setStrokeColor(color)
-    var el = document.querySelector('.stroke-color-A')
-    if (el) {
-        el.style.color = '#ffffff'
-        el.style.textShadow =
-            '-0.5px -0.5px ' + color +
-            ', 0.5px -0.5px ' + color +
-            ', -0.5px 0.5px ' + color +
-            ', 0.5px 0.5px ' + color
-    }
+    gEditorDefaults.strokeColor = color
+    syncColorButtonsWithLine()
     renderMeme()
 }
 
 function onSetFont(font) {
     setFont(font)
+    gEditorDefaults.font = font
     renderMeme()
 }
 
-function onSetAlign(align) {
-    gMeme.isLineSelected = true
-    setAlign(align)
+function onFontSelected(font) {
+    var meme = getMeme()
+    meme.isLineSelected = true
+    setFont(font)
+    gEditorDefaults.font = font
+    updateEditorInputs()
+    renderMeme()
+}
+
+
+function onChangeFontSize(diff) {
+    changeFontSize(diff)
+    var meme = getMeme()
+    var line = meme.lines[meme.selectedLineIdx]
+    if (line) gEditorDefaults.size = line.size
     renderMeme()
 }
 
 function onDownloadMeme() {
-    gMeme.isLineSelected = false
+    var meme = getMeme()
+    meme.isLineSelected = false
     renderMeme()
     setTimeout(function () {
         var link = document.createElement('a')
         link.download = 'meme.png'
         link.href = gElCanvas.toDataURL('image/png')
         link.click()
+        meme.isLineSelected = true
+        renderMeme()
     }, 30)
 }
 
-function onChangeFontSize(diff) {
-    changeFontSize(diff)
-    renderMeme()
-}
-
 function onAddLine() {
-    gMeme.isLineSelected = true
+    var meme = getMeme()
+    meme.isLineSelected = true
     addLine()
+    var line = meme.lines[meme.selectedLineIdx]
+    if (line) {
+        line.color = gEditorDefaults.color
+        line.strokeColor = gEditorDefaults.strokeColor
+        line.font = gEditorDefaults.font
+        line.size = gEditorDefaults.size
+        if (gElCanvas) {
+            line.x = gElCanvas.width / 2
+        }
+    }
     updateEditorInputs()
     renderMeme()
 }
 
 function onSwitchLine() {
-    gMeme.isLineSelected = true
+    var meme = getMeme()
+    meme.isLineSelected = true
     switchLine()
     updateEditorInputs()
     renderMeme()
@@ -180,11 +204,12 @@ function onAddSticker(emoji) {
 }
 
 function onDown(ev) {
-    gMeme.isLineSelected = false
+    var meme = getMeme()
+    meme.isLineSelected = false
     renderMeme()
+
     var offsetX = ev.offsetX
     var offsetY = ev.offsetY
-    var meme = getMeme()
 
     for (var i = meme.lines.length - 1; i >= 0; i--) {
         var line = meme.lines[i]
@@ -195,7 +220,7 @@ function onDown(ev) {
             offsetY >= rect.y &&
             offsetY <= rect.y + rect.h
         ) {
-            gMeme.isLineSelected = true
+            meme.isLineSelected = true
             setSelectedLine(i)
             gDraggedLineIdx = i
             gIsDragging = true
@@ -248,32 +273,37 @@ function onUp() {
     gIsDragging = false
     gDraggedLineIdx = null
     gLastPos = null
-    gElCanvas.style.cursor = 'default'
+    if (gElCanvas) gElCanvas.style.cursor = 'default'
 }
 
-
 function onSaveMeme() {
-    gMeme.isLineSelected = false
+    var meme = getMeme()
+    meme.isLineSelected = false
     renderMeme()
     setTimeout(function () {
-        if (typeof gMeme.savedIdx === 'number' && gMeme.savedIdx >= 0) {
-            overwriteSavedMeme(gMeme.savedIdx)
+        if (typeof meme.savedIdx === 'number' && meme.savedIdx >= 0) {
+            overwriteSavedMeme(meme.savedIdx)
         } else {
             saveMemeToStorage()
         }
         alert('Meme saved!')
+        meme.isLineSelected = true
+        renderMeme()
     }, 30)
 }
 
 function onSaveMemeCopy() {
-    gMeme.isLineSelected = false
+    var meme = getMeme()
+    meme.isLineSelected = false
     renderMeme()
     setTimeout(function () {
+        meme.savedIdx = -1
         saveMemeToStorage()
         alert('Meme saved as copy!')
+        meme.isLineSelected = true
+        renderMeme()
     }, 30)
 }
-
 
 function getLineRect(line) {
     var font = line.font || 'Arial'
@@ -300,7 +330,6 @@ function getLineRect(line) {
     }
 }
 
-
 function syncColorButtonsWithLine() {
     var meme = getMeme()
     var line = meme.lines[meme.selectedLineIdx]
@@ -311,66 +340,59 @@ function syncColorButtonsWithLine() {
     var textInput = document.querySelector('.text-color-input')
     var strokeInput = document.querySelector('.stroke-color-input')
 
-    if (textA) textA.style.color = line.color
+    if (textA) textA.style.color = line.color || '#ff0000'
     if (strokeA) {
+        var c = line.strokeColor || '#000000'
         strokeA.style.color = '#ffffff'
         strokeA.style.textShadow =
-            '-0.5px -0.5px ' + line.strokeColor +
-            ', 0.5px -0.5px ' + line.strokeColor +
-            ', -0.5px 0.5px ' + line.strokeColor +
-            ', 0.5px 0.5px ' + line.strokeColor
+            '-0.5px -0.5px ' + c +
+            ', 0.5px -0.5px ' + c +
+            ', -0.5px 0.5px ' + c +
+            ', 0.5px 0.5px ' + c
     }
-    if (textInput) textInput.value = line.color
-    if (strokeInput) strokeInput.value = line.strokeColor
+    if (textInput) textInput.value = line.color || '#ff0000'
+    if (strokeInput) strokeInput.value = line.strokeColor || '#000000'
 }
-
-function openTextColorPicker() {
-    var el = document.querySelector('.text-color-input')
-    if (el) el.click()
-}
-
-function openStrokeColorPicker() {
-    var el = document.querySelector('.stroke-color-input')
-    if (el) el.click()
-}
-
-
-function onFontSelected(font) {
-    onSetFont(font)
-}
-
 
 function updateSaveCopyVisibility() {
+    var meme = getMeme()
     var btn = document.querySelector('.btn-save-copy')
     if (!btn) return
-    if (typeof gMeme.savedIdx === 'number' && gMeme.savedIdx >= 0) {
+    if (typeof meme.savedIdx === 'number' && meme.savedIdx >= 0) {
         btn.classList.remove('hidden')
     } else {
         btn.classList.add('hidden')
     }
 }
 
-
 function onMoveUp() {
-    var line = gMeme.lines[gMeme.selectedLineIdx]
+    var meme = getMeme()
+    var line = meme.lines[meme.selectedLineIdx]
+    if (!line) return
     line.y -= MOVE_DELTA
     renderMeme()
 }
 
 function onMoveDown() {
-    var line = gMeme.lines[gMeme.selectedLineIdx]
+    var meme = getMeme()
+    var line = meme.lines[meme.selectedLineIdx]
+    if (!line) return
     line.y += MOVE_DELTA
     renderMeme()
 }
 
 function onMoveLeft() {
-    var line = gMeme.lines[gMeme.selectedLineIdx]
+    var meme = getMeme()
+    var line = meme.lines[meme.selectedLineIdx]
+    if (!line) return
     line.x -= MOVE_DELTA
     renderMeme()
 }
 
 function onMoveRight() {
-    var line = gMeme.lines[gMeme.selectedLineIdx]
+    var meme = getMeme()
+    var line = meme.lines[meme.selectedLineIdx]
+    if (!line) return
     line.x += MOVE_DELTA
     renderMeme()
 }
@@ -381,3 +403,28 @@ function toggleEmojiBox() {
     el.classList.toggle('hidden')
 }
 
+function resetMemeToDefault() {
+    resetMemeDataToInitial()
+    var meme = getMeme()
+    var line = meme.lines[0]
+    line.color = gEditorDefaults.color
+    line.strokeColor = gEditorDefaults.strokeColor
+    line.font = gEditorDefaults.font
+    line.size = gEditorDefaults.size
+    meme.selectedLineIdx = 0
+    meme.isLineSelected = true
+}
+
+function applyEditorDefaults() {
+    var meme = getMeme()
+    if (!meme.lines.length) {
+        resetMemeToDefault()
+        return
+    }
+    var line = meme.lines[meme.selectedLineIdx]
+    line.color = line.color || gEditorDefaults.color
+    line.strokeColor = line.strokeColor || gEditorDefaults.strokeColor
+    line.font = line.font || gEditorDefaults.font
+    line.size = line.size || gEditorDefaults.size
+    updateEditorInputs()
+}

@@ -11,6 +11,7 @@ function renderGallery() {
 function onImgSelect(imgId) {
     setImg(imgId)
     showEditor()
+    applyEditorDefaults()
     renderMeme()
     updateEditorInputs()
     updateSaveCopyVisibility()
@@ -27,4 +28,6 @@ function onBackToGallery() {
     document.querySelector('.editor').classList.add('hidden')
     document.querySelector('.saved-memes').classList.add('hidden')
     document.querySelector('.gallery').classList.remove('hidden')
+    resetMemeToDefault()
+
 }

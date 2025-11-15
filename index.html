@@ -95,6 +95,24 @@
 
               <button onclick="onChangeFontSize(-2)">A−</button>
               <button onclick="onChangeFontSize(2)">A＋</button>
+
+              <button class="color-btn">
+                <span class="text-color-A">A</span>
+                <input
+                  type="color"
+                  class="text-color-input"
+                  onchange="onSetColor(this.value)"
+                />
+              </button>
+
+              <button class="color-btn">
+                <span class="stroke-color-A">A</span>
+                <input
+                  type="color"
+                  class="stroke-color-input"
+                  onchange="onSetStrokeColor(this.value)"
+                />
+              </button>
             </div>
 
             <input

@@ -24,14 +24,16 @@ function renderSavedMemes() {
         }
 
         return `
-        <div class="saved-item">
-            <img src="${src}" onclick="onLoadSavedMeme(${idx})">
-            <button class="saved-delete-btn" onclick="onDeleteSavedMeme(event, ${idx})">✕</button>
-        </div>`
+            <div class="saved-item">
+                <img src="${src}" class="gallery-img" onclick="onLoadSavedMeme(${idx})">
+                <button class="saved-delete-btn" onclick="onDeleteSavedMeme(${idx})">✕</button>
+            </div>
+        `
     }).join('')
 
     el.innerHTML = html
 }
+
 
 
 function onLoadSavedMeme(idx) {
@@ -45,11 +47,11 @@ function onLoadSavedMeme(idx) {
     renderMeme()
 }
 
-function onDeleteSavedMeme(ev, idx) {
-    ev.stopPropagation()
-    if (!confirm('Delete this meme?')) return
 
-    deleteSavedMeme(idx)
+function onDeleteSavedMeme(idx) {
+    if (!confirm('Delete this meme?')) return
+    var memes = getSavedMemes()
+    memes.splice(idx, 1)
+    saveToStorage('savedMemes', memes)
     renderSavedMemes()
 }
-

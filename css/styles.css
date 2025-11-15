@@ -509,8 +509,8 @@ button {
 
 .emoji-box {
   position: absolute;
-  top: 40px; 
-  left: 0; 
+  top: 40px;
+  left: 0;
   background: white;
   padding: 8px;
   border: 1px solid #ccc;
@@ -533,7 +533,6 @@ button {
   cursor: pointer;
 }
 
-
 .emoji-container {
   position: relative;
   display: inline-block;
@@ -548,13 +547,13 @@ button {
 
 .emoji-box {
   position: absolute;
-  top: 36px; 
+  top: 36px;
   left: 0;
   padding: 8px;
   background: white;
   border: 1px solid #ccc;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -570,4 +569,30 @@ button {
   border: none;
   font-size: 20px;
   cursor: pointer;
+}
+
+.color-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: #f7f7f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  position: relative;
+}
+
+.text-color-A,
+.stroke-color-A {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.color-btn input[type="color"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
 }
