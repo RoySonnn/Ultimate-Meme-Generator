@@ -82,7 +82,7 @@ function updateEditorInputs() {
     if (elTextInput) elTextInput.value = line.txt
     if (elTextColor) elTextColor.value = line.color || '#000000'
     if (elStrokeColor) elStrokeColor.value = line.strokeColor || '#ff0000'
-    if (elFontSelect) elFontSelect.value = line.font || 'Comic Sans MS'
+    if (elFontSelect) elFontSelect.value = line.font || 'Arial'
     if (elLineIndex) elLineIndex.textContent = meme.selectedLineIdx + 1
     if (elLineCount) elLineCount.textContent = meme.lines.length
 
@@ -335,22 +335,10 @@ function openStrokeColorPicker() {
     if (el) el.click()
 }
 
-function onToggleFontMenu() {
-    var select = document.querySelector('.font-select')
-    if (!select) return
-    if (select.classList.contains('open')) {
-        select.classList.remove('open')
-    } else {
-        select.classList.add('open')
-        select.focus()
-    }
-}
-
 function onFontSelected(font) {
-    var select = document.querySelector('.font-select')
-    if (select) select.classList.remove('open')
     onSetFont(font)
 }
+
 
 function updateSaveCopyVisibility() {
     var btn = document.querySelector('.btn-save-copy')

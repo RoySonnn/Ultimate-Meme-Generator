@@ -75,7 +75,6 @@
 
           <div class="editor-panel">
             <h2 class="panel-title">Edit Text Lines</h2>
-
             <input
               type="text"
               class="text-input"
@@ -99,57 +98,45 @@
               </div>
             </div>
 
-            <div class="align-row">
-              <button onclick="onSetAlign('left')">⬅️</button>
-              <button onclick="onSetAlign('center')">=</button>
-              <button onclick="onSetAlign('right')">➡️</button>
-            </div>
+            <div class="toolbar-row">
+              <select class="font-select" onchange="onFontSelected(this.value)">
+                <option value="Arial" selected>Arial</option>
+                <option value="Impact">Impact</option>
+                <option value="Comic Sans MS">Comic Sans</option>
+              </select>
 
-            <div class="style-row">
-              <div class="font-wrapper">
-                <button
-                  type="button"
-                  class="btn font-toggle"
-                  onclick="onToggleFontMenu()"
-                >
-                  FONT ⌄
-                </button>
-                <select
-                  class="font-select"
-                  onchange="onFontSelected(this.value)"
-                >
-                  <option value="Comic Sans MS">Comic Sans</option>
-                  <option value="Impact">Impact</option>
-                  <option value="Arial">Arial</option>
-                </select>
-              </div>
-
-              <div class="font-size">
+              <div class="font-size-group">
                 <button onclick="onChangeFontSize(-2)">A−</button>
                 <button onclick="onChangeFontSize(2)">A＋</button>
               </div>
+            </div>
 
-              <div class="color-row">
-                <button class="color-btn text-color-btn" type="button">
-                  <span class="text-color-A">A</span>
-                  <input
-                    type="color"
-                    class="text-color-input"
-                    value="#000000"
-                    onchange="onSetColor(this.value)"
-                  />
-                </button>
+            <div class="toolbar-row">
+              <button onclick="onSetAlign('left')">⬅️</button>
+              <button onclick="onSetAlign('center')">=</button>
+              <button onclick="onSetAlign('right')">➡️</button>
+              <button onclick="onMoveLineUp()">🔼</button>
+              <button onclick="onMoveLineDown()">🔽</button>
+            </div>
 
-                <button class="color-btn stroke-color-btn" type="button">
-                  <span class="stroke-color-A">A</span>
-                  <input
-                    type="color"
-                    class="stroke-color-input"
-                    value="#ff0000"
-                    onchange="onSetStrokeColor(this.value)"
-                  />
-                </button>
-              </div>
+            <div class="toolbar-row">
+              <button class="color-btn">
+                <span class="text-color-A">A</span>
+                <input
+                  type="color"
+                  class="text-color-input"
+                  onchange="onSetColor(this.value)"
+                />
+              </button>
+
+              <button class="color-btn">
+                <span class="stroke-color-A">A</span>
+                <input
+                  type="color"
+                  class="stroke-color-input"
+                  onchange="onSetStrokeColor(this.value)"
+                />
+              </button>
             </div>
 
             <div class="emojis-row">
@@ -164,6 +151,7 @@
               <button onclick="onAddSticker('🙏')">🙏</button>
               <button onclick="onAddSticker('💩')">💩</button>
             </div>
+
             <div class="actions-row">
               <button class="btn-save" onclick="onSaveMeme()">Save</button>
               <button class="btn-save-copy hidden" onclick="onSaveMemeCopy()">

@@ -1,3 +1,4 @@
+
 *,
 *::before,
 *::after {
@@ -12,6 +13,8 @@ body {
 
 button {
   font-family: inherit;
+  cursor: pointer;
+  user-select: none;
 }
 
 .header {
@@ -50,8 +53,6 @@ button {
   border: none;
   font-size: 0.9rem;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
   color: #777;
 }
 
@@ -63,8 +64,8 @@ button {
   background: none;
   border: none;
   font-size: 1.4rem;
-  cursor: pointer;
 }
+
 
 .mobile-menu {
   position: fixed;
@@ -93,7 +94,6 @@ button {
   width: 32px;
   height: 32px;
   font-size: 1rem;
-  cursor: pointer;
 }
 
 .mobile-nav {
@@ -111,9 +111,8 @@ button {
   color: #ffffff;
   font-size: 1.4rem;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
 }
+
 
 .main-content {
   max-width: 1200px;
@@ -152,6 +151,7 @@ button {
   opacity: 0.7;
 }
 
+
 .gallery-grid,
 .saved-grid {
   display: grid;
@@ -167,14 +167,9 @@ button {
   cursor: pointer;
 }
 
+
 .saved-item {
   position: relative;
-}
-
-.saved-item img {
-  width: 100%;
-  display: block;
-  border-radius: 10px;
 }
 
 .saved-delete-btn {
@@ -190,9 +185,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   font-size: 14px;
-  line-height: 0;
 }
 
 .btn-back {
@@ -202,7 +195,6 @@ button {
   padding: 0.5rem 0.9rem;
   border-radius: 999px;
   font-size: 0.8rem;
-  cursor: pointer;
 }
 
 .btn-back.inline {
@@ -252,22 +244,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
   font-size: 0.85rem;
-}
-
-.line-info {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.line-label {
-  color: #666;
-}
-
-.line-counter {
-  white-space: nowrap;
 }
 
 .line-actions {
@@ -275,85 +252,40 @@ button {
   gap: 0.25rem;
 }
 
-.line-actions button {
+.toolbar-row button,
+.line-actions button,
+.font-size-group button {
+  border-radius: 6px;
   border: 1px solid #ddd;
   background-color: #f7f7f7;
-  border-radius: 6px;
-  padding: 0.25rem 0.5rem;
-  cursor: pointer;
+  padding: 0.25rem 0.6rem;
 }
 
-.align-row {
+.toolbar-row {
   display: flex;
-  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  align-items: center;
+}
+
+.font-size-group {
+  display: flex;
   gap: 0.25rem;
 }
 
-.align-row button {
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  background-color: #f7f7f7;
-  padding: 0.25rem 0.5rem;
-  cursor: pointer;
-}
-
-.style-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.font-wrapper {
-  position: relative;
-}
-
-.font-toggle {
+.toolbar-row select.font-select {
   border-radius: 6px;
   border: 1px solid #ddd;
   background-color: #f7f7f7;
   padding: 0.25rem 0.8rem;
   font-size: 0.8rem;
-  cursor: pointer;
 }
 
-.font-select {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 100%;
-  margin-top: 4px;
-  display: none;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  padding: 0.35rem 0.5rem;
-  font-size: 0.9rem;
-  background: #ffffff;
-  z-index: 5;
-}
-
-.font-select.open {
-  display: block;
-}
-
-.font-size {
-  display: flex;
-  gap: 0.25rem;
-}
-
-.font-size button {
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  background-color: #f7f7f7;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.8rem;
-  cursor: pointer;
-}
-
-.color-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
+.toolbar-row button:hover,
+.font-size-group button:hover,
+.line-actions button:hover {
+  background-color: #ececec;
 }
 
 .color-btn {
@@ -366,16 +298,12 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
 }
 
 .color-btn input[type="color"] {
   position: absolute;
   inset: 0;
   opacity: 0;
-  border: none;
-  padding: 0;
-  cursor: pointer;
 }
 
 .text-color-A,
@@ -395,7 +323,6 @@ button {
   padding: 2px;
   background: none;
   border: none;
-  cursor: pointer;
 }
 
 .actions-row {
@@ -404,43 +331,29 @@ button {
   margin-top: 0.5rem;
 }
 
-.btn-save {
-  flex: 1;
-  border: none;
-  background-color: #f0f0f0;
-  color: #555;
-  padding: 0.6rem 0.9rem;
-  border-radius: 999px;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.btn-save-copy {
-  flex: 1;
-  border: none;
-  background-color: #f0f0f0;
-  color: #555;
-  padding: 0.6rem 0.9rem;
-  border-radius: 999px;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
+.btn-save,
+.btn-save-copy,
 .btn-share {
   flex: 1;
   border: none;
-  background-color: #ff9100;
+  background-color: #005499;
   color: #ffffff;
   padding: 0.6rem 0.9rem;
   border-radius: 999px;
   font-size: 0.9rem;
-  letter-spacing: 0.08em;
-  cursor: pointer;
 }
+
+.btn-save:hover,
+.btn-save-copy:hover,
+.btn-share:hover {
+  background-color: #00407a;
+}
+
 
 .hidden {
   display: none !important;
 }
+
 
 @media (min-width: 600px) {
   .gallery-grid,
@@ -460,7 +373,6 @@ button {
   .nav-desktop {
     display: flex;
   }
-
   .nav-toggle {
     display: none;
   }
@@ -483,10 +395,18 @@ button {
 
   .canvas-wrapper {
     flex: 1;
-    justify-content: center;
   }
 
   .editor-panel {
     flex: 0 0 340px;
+  }
+}
+
+@media (max-width: 480px) {
+  .toolbar-row {
+    justify-content: space-between;
+  }
+  .font-size-group {
+    margin-left: auto;
   }
 }

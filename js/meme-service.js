@@ -24,7 +24,7 @@ var gMeme = {
             size: 30,
             color: '#000000ff',
             strokeColor: '#ff0000',
-            font: 'Comic Sans MS',
+            font: 'Arial',
             align: 'center',
             x: 250,
             y: 60
@@ -83,7 +83,7 @@ function addLine() {
         size: 30,
         color: '#000000ff',
         strokeColor: '#ff0000ff',
-        font: 'Comic Sans MS',
+        font: 'Arial',
         align: 'center',
         x: x,
         y: y
@@ -106,7 +106,7 @@ function deleteLine() {
             size: 30,
             color: '#000000ff',
             strokeColor: '#ff0000ff',
-            font: 'Comic Sans MS',
+            font: 'Arial',
             align: 'center',
             x: 250,
             y: 60
