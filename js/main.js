@@ -1,5 +1,7 @@
 'use strict'
 
+var gLastScreen = 'gallery'
+
 function onInit() {
   initImgs()
   renderGallery()

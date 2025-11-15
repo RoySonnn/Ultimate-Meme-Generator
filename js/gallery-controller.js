@@ -55,6 +55,8 @@ function renderFilteredGallery(imgs) {
 
 
 function onImgSelect(imgId) {
+    gLastScreen = 'gallery'
+    document.querySelector('.btn-back.inline').textContent = 'Back to Gallery'
     clearAllSearchInputs()
     setImg(imgId)
     showEditor()
@@ -83,4 +85,18 @@ function onBackToGallery() {
 }
 
 
+function onEditorBack() {
+    clearAllSearchInputs()
 
+    if (gLastScreen === 'saved') {
+        document.querySelector('.editor').classList.add('hidden')
+        document.querySelector('.gallery').classList.add('hidden')
+        document.querySelector('.saved-memes').classList.remove('hidden')
+        renderSavedMemes()
+    } else {
+        document.querySelector('.editor').classList.add('hidden')
+        document.querySelector('.saved-memes').classList.add('hidden')
+        document.querySelector('.gallery').classList.remove('hidden')
+        renderGallery()
+    }
+}
