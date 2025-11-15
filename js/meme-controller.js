@@ -16,6 +16,7 @@ function initMemeEditor() {
     window.addEventListener('mouseup', onUp)
 
     syncColorButtonsWithLine()
+    updateSaveCopyVisibility()
 }
 
 function renderMeme() {
@@ -64,7 +65,6 @@ function renderMeme() {
     }
 }
 
-
 function updateEditorInputs() {
     var meme = getMeme()
     var line = meme.lines[meme.selectedLineIdx]
@@ -98,8 +98,8 @@ function updateEditorInputs() {
     }
 
     if (elTextInput) elTextInput.focus()
+    updateSaveCopyVisibility()
 }
-
 
 function onSetLineTxt(txt) {
     gMeme.isLineSelected = true
@@ -127,7 +127,6 @@ function onSetStrokeColor(color) {
             ', 0.5px 0.5px ' + color
     }
     renderMeme()
-
 }
 
 function onSetFont(font) {
@@ -145,14 +144,13 @@ function onDownloadMeme() {
     gMeme.isLineSelected = false
     renderMeme()
 
-    setTimeout(() => {
+    setTimeout(function () {
         var link = document.createElement('a')
         link.download = 'meme.png'
         link.href = gElCanvas.toDataURL('image/png')
         link.click()
     }, 30)
 }
-
 
 function onChangeFontSize(diff) {
     changeFontSize(diff)
@@ -261,12 +259,24 @@ function onUp() {
 function onSaveMeme() {
     gMeme.isLineSelected = false
     renderMeme()
-    setTimeout(() => {
-        saveMemeToStorage()
+    setTimeout(function () {
+        if (typeof gMeme.savedIdx === 'number' && gMeme.savedIdx >= 0) {
+            overwriteSavedMeme(gMeme.savedIdx)
+        } else {
+            saveMemeToStorage()
+        }
         alert('Meme saved!')
     }, 30)
 }
 
+function onSaveMemeCopy() {
+    gMeme.isLineSelected = false
+    renderMeme()
+    setTimeout(function () {
+        saveMemeToStorage()
+        alert('Meme saved as copy!')
+    }, 30)
+}
 
 function getLineRect(line) {
     var font = line.font || 'Impact'
@@ -310,7 +320,6 @@ function syncColorButtonsWithLine() {
             ', 0.5px -0.5px ' + line.strokeColor +
             ', -0.5px 0.5px ' + line.strokeColor +
             ', 0.5px 0.5px ' + line.strokeColor
-
     }
     if (textInput) textInput.value = line.color
     if (strokeInput) strokeInput.value = line.strokeColor
@@ -341,4 +350,14 @@ function onFontSelected(font) {
     var select = document.querySelector('.font-select')
     if (select) select.classList.remove('open')
     onSetFont(font)
+}
+
+function updateSaveCopyVisibility() {
+    var btn = document.querySelector('.btn-save-copy')
+    if (!btn) return
+    if (typeof gMeme.savedIdx === 'number' && gMeme.savedIdx >= 0) {
+        btn.classList.remove('hidden')
+    } else {
+        btn.classList.add('hidden')
+    }
 }

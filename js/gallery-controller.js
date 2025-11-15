@@ -13,7 +13,9 @@ function onImgSelect(imgId) {
     showEditor()
     renderMeme()
     updateEditorInputs()
+    updateSaveCopyVisibility()
 }
+
 
 function showEditor() {
     document.querySelector('.gallery').classList.add('hidden')

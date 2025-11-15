@@ -17,6 +17,7 @@ var gMeme = {
     selectedImgId: 1,
     selectedLineIdx: 0,
     isLineSelected: true,
+    savedIdx: null,
     lines: [
         {
             txt: 'I sometimes eat Falafel',
@@ -47,6 +48,7 @@ function setLineTxt(txt) {
 
 function setImg(imgId) {
     gMeme.selectedImgId = imgId
+    gMeme.savedIdx = null
 }
 
 function setLineColor(color) {
@@ -121,15 +123,30 @@ function setSelectedLine(idx) {
     gMeme.selectedLineIdx = idx
 }
 
-function saveMemeToStorage() {
+function buildMemeForSave() {
     var memeCopy = JSON.parse(JSON.stringify(gMeme))
     if (window.gElCanvas) {
         try {
             memeCopy.savedImg = gElCanvas.toDataURL('image/png')
         } catch (e) { }
     }
+    memeCopy.savedIdx = null
+    return memeCopy
+}
+
+function saveMemeToStorage() {
     var memes = loadFromStorage(SAVED_MEMES_KEY) || []
-    memes.push(memeCopy)
+    memes.push(buildMemeForSave())
+    saveToStorage(SAVED_MEMES_KEY, memes)
+}
+
+function overwriteSavedMeme(idx) {
+    var memes = loadFromStorage(SAVED_MEMES_KEY) || []
+    if (typeof idx !== 'number' || idx < 0 || idx >= memes.length) {
+        memes.push(buildMemeForSave())
+    } else {
+        memes[idx] = buildMemeForSave()
+    }
     saveToStorage(SAVED_MEMES_KEY, memes)
 }
 
@@ -137,9 +154,18 @@ function getSavedMemes() {
     return loadFromStorage(SAVED_MEMES_KEY) || []
 }
 
-function loadMeme(meme) {
+function loadMeme(meme, idx) {
     gMeme = JSON.parse(JSON.stringify(meme))
+    gMeme.savedIdx = (typeof idx === 'number') ? idx : null
 }
+
+function deleteSavedMeme(idx) {
+    var memes = loadFromStorage(SAVED_MEMES_KEY) || []
+    if (idx < 0 || idx >= memes.length) return
+    memes.splice(idx, 1)
+    saveToStorage(SAVED_MEMES_KEY, memes)
+}
+
 
 function saveToStorage(key, value) {
     localStorage.setItem(key, JSON.stringify(value))
