@@ -58,9 +58,22 @@
       </section>
 
       <section class="saved-memes hidden">
-        <div class="saved-toolbar">
-          <input type="text" class="search-input" placeholder="Search" />
+        <div class="saved-toolbar saved-tag-search">
+          <div class="saved-selected-tags"></div>
+
+          <input
+            type="text"
+            class="tag-input saved-tag-search-input"
+            placeholder="Search tags..."
+            oninput="onSavedLiveTagSearch(this.value)"
+            onclick="onSavedToggleTagDropdown()"
+          />
+
+          <div class="saved-tag-dropdown hidden">
+            <ul class="saved-tag-options"></ul>
+          </div>
         </div>
+
         <div class="saved-grid"></div>
       </section>
 

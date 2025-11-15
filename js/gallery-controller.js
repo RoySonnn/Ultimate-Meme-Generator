@@ -56,11 +56,20 @@ function onBackToGallery() {
 
 function onEditorBack() {
     clearAllSearchInputs()
+
     if (gLastScreen === 'saved') {
         document.querySelector('.editor').classList.add('hidden')
         document.querySelector('.gallery').classList.add('hidden')
         document.querySelector('.saved-memes').classList.remove('hidden')
+
+        var input = document.querySelector('.saved-tag-search-input')
+        if (input) input.value = ''
+
+        var drop = document.querySelector('.saved-tag-dropdown')
+        if (drop) drop.classList.add('hidden')
+
         renderSavedMemes()
+
     } else {
         document.querySelector('.editor').classList.add('hidden')
         document.querySelector('.saved-memes').classList.add('hidden')
@@ -73,6 +82,7 @@ function onEditorBack() {
         }
     }
 }
+
 
 function onToggleTagDropdown() {
     var box = document.querySelector('.tag-dropdown')

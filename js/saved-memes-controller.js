@@ -1,12 +1,23 @@
 'use strict'
 
+var gSavedSelectedTags = []
+
+
 function onShowSavedMemes() {
-    clearAllSearchInputs()
     document.querySelector('.gallery').classList.add('hidden')
     document.querySelector('.editor').classList.add('hidden')
     document.querySelector('.saved-memes').classList.remove('hidden')
-    renderSavedMemes()
+
+    var input = document.querySelector('.saved-tag-search-input')
+    if (input) input.value = ''
+
+    if (gSavedSelectedTags.length) {
+        filterSavedByTags()
+    } else {
+        renderSavedMemes()
+    }
 }
+
 
 function renderSavedMemes() {
     var saved = getSavedMemes()
@@ -60,30 +71,39 @@ function onDeleteSavedMeme(idx) {
     renderSavedMemes()
 }
 
-function onSearchSaved(ev) {
-    var txt = ev.target.value.toLowerCase().trim()
+function getKeywordsForSavedMemes() {
     var memes = getSavedMemes()
+    var set = new Set()
 
-    if (!txt) {
-        renderSavedMemes()
-        return
-    }
-
-    var filtered = memes.filter(function (meme) {
-        var matchText = meme.lines.some(function (line) {
-            return line.txt.toLowerCase().includes(txt)
-        })
-
+    memes.forEach(meme => {
         var img = getImgById(meme.selectedImgId)
-        var matchTag = img && img.keywords.some(function (keyword) {
-            return keyword.toLowerCase().includes(txt)
-        })
-
-        return matchText || matchTag
+        if (!img) return
+        img.keywords.forEach(t => set.add(t))
     })
 
-    renderSavedFiltered(filtered)
+    return Array.from(set)
 }
+
+function renderSavedTagOptions(txt = '') {
+    var elList = document.querySelector('.saved-tag-options')
+    var tags = getKeywordsForSavedMemes()
+
+    var finalTags = tags.filter(tag => !gSavedSelectedTags.includes(tag))
+
+    txt = txt.toLowerCase().trim()
+    if (txt) {
+        finalTags = finalTags.filter(tag =>
+            tag.toLowerCase().includes(txt)
+        )
+    }
+
+    elList.innerHTML = finalTags
+        .map(tag => `<li onclick="onSavedSelectTag('${tag}')">${tag}</li>`)
+        .join('')
+}
+
+
+
 
 function renderSavedFiltered(memes) {
     var el = document.querySelector('.saved-grid')
@@ -103,3 +123,92 @@ function fixSavedIndexes() {
     })
     saveToStorage(SAVED_MEMES_KEY, memes)
 }
+
+function onSavedToggleTagDropdown() {
+    var box = document.querySelector('.saved-tag-dropdown')
+    var inputVal = document.querySelector('.saved-tag-search-input').value || ''
+
+    if (box.classList.contains('hidden')) {
+        renderSavedTagOptions(inputVal)
+        box.classList.remove('hidden')
+    } else {
+        box.classList.add('hidden')
+    }
+}
+
+
+function onSavedSelectTag(tag) {
+    if (!gSavedSelectedTags.includes(tag)) {
+        gSavedSelectedTags.push(tag)
+    }
+
+    var input = document.querySelector('.saved-tag-search-input')
+    if (input) input.value = ''
+
+    renderSavedSelectedTags()
+    filterSavedByTags()
+
+    document.querySelector('.saved-tag-dropdown').classList.add('hidden')
+}
+
+function renderSavedSelectedTags() {
+    var el = document.querySelector('.saved-selected-tags')
+    el.innerHTML = gSavedSelectedTags
+        .map(tag => `<div class="selected-tag">${tag}<button onclick="onSavedRemoveTag('${tag}')">✕</button></div>`)
+        .join('')
+}
+
+
+function onSavedRemoveTag(tag) {
+    gSavedSelectedTags = gSavedSelectedTags.filter(t => t !== tag)
+    renderSavedSelectedTags()
+    filterSavedByTags()
+}
+
+
+function filterSavedByTags() {
+    var memes = getSavedMemes()
+
+    if (!gSavedSelectedTags.length) {
+        renderSavedMemes()
+        return
+    }
+
+    var filtered = memes.filter(meme => {
+        var img = getImgById(meme.selectedImgId)
+        if (!img) return false
+        return gSavedSelectedTags.every(tag => img.keywords.includes(tag))
+    })
+
+    renderSavedFiltered(filtered)
+}
+
+
+function onSavedLiveTagSearch(txt) {
+    txt = txt.toLowerCase().trim()
+
+    renderSavedTagOptions(txt)
+
+    if (!txt) {
+        filterSavedByTags()
+        return
+    }
+
+    var base = getSavedMemes().filter(meme => {
+        var img = getImgById(meme.selectedImgId)
+        if (!img) return false
+        return gSavedSelectedTags.every(tag => img.keywords.includes(tag))
+    })
+
+    var filtered = base.filter(meme => {
+        var img = getImgById(meme.selectedImgId)
+        if (!img) return false
+        return img.keywords.some(keyword =>
+            keyword.toLowerCase().includes(txt)
+        )
+    })
+
+    renderSavedFiltered(filtered)
+}
+
+
