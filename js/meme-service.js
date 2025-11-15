@@ -40,14 +40,12 @@ function getMeme() {
     return gMeme
 }
 
-function getImgById(imgId) {
-    return gImgs.find(function (img) {
-        return img.id === imgId
-    })
+function getImgById(id) {
+    return gImgs.find(img => img.id === id)
 }
 
-function setImg(imgId) {
-    gMeme.selectedImgId = imgId
+function setImg(id) {
+    gMeme.selectedImgId = id
     gMeme.savedIdx = -1
 }
 
@@ -57,40 +55,28 @@ function setLineTxt(txt) {
 }
 
 function setLineColor(color) {
-    if (!gMeme.lines.length) return
     gMeme.lines[gMeme.selectedLineIdx].color = color
 }
 
 function setStrokeColor(color) {
-    if (!gMeme.lines.length) return
     gMeme.lines[gMeme.selectedLineIdx].strokeColor = color
 }
 
 function setFont(font) {
-    if (!gMeme.lines.length) return
     gMeme.lines[gMeme.selectedLineIdx].font = font
 }
 
-function setAlign(align) {
-    if (!gMeme.lines.length) return
-    gMeme.lines[gMeme.selectedLineIdx].align = align
-}
-
 function changeFontSize(diff) {
-    if (!gMeme.lines.length) return
-    gMeme.lines[gMeme.selectedLineIdx].size += diff
-    if (gMeme.lines[gMeme.selectedLineIdx].size < 8) {
-        gMeme.lines[gMeme.selectedLineIdx].size = 8
-    }
+    var line = gMeme.lines[gMeme.selectedLineIdx]
+    if (!line) return
+    line.size += diff
+    if (line.size < 8) line.size = 8
 }
 
 function addLine() {
-    var linesCount = gMeme.lines.length
     var x = 250
-    var y
-    if (linesCount === 0) y = 80
-    else if (linesCount === 1) y = 420
-    else y = 250
+    var y = gMeme.lines.length === 0 ? 80 :
+        gMeme.lines.length === 1 ? 420 : 250
 
     gMeme.lines.push({
         txt: '',
@@ -99,9 +85,10 @@ function addLine() {
         strokeColor: '#000000',
         font: 'Arial',
         align: 'center',
-        x: x,
-        y: y
+        x,
+        y
     })
+
     gMeme.selectedLineIdx = gMeme.lines.length - 1
     gMeme.isLineSelected = true
 }
@@ -117,16 +104,29 @@ function switchLine() {
 
 function deleteLine() {
     if (!gMeme.lines.length) return
+
     gMeme.lines.splice(gMeme.selectedLineIdx, 1)
 
     if (!gMeme.lines.length) {
-        gMeme = createInitialMeme()
+        gMeme.lines.push({
+            txt: '',
+            size: gEditorDefaults.size,
+            color: gEditorDefaults.color,
+            strokeColor: gEditorDefaults.strokeColor,
+            font: gEditorDefaults.font,
+            align: 'center',
+            x: 250,
+            y: 80
+        })
+        gMeme.selectedLineIdx = 0
+        gMeme.isLineSelected = true
         return
     }
 
     if (gMeme.selectedLineIdx >= gMeme.lines.length) {
         gMeme.selectedLineIdx = gMeme.lines.length - 1
     }
+
     gMeme.isLineSelected = true
 }
 
@@ -137,18 +137,20 @@ function setSelectedLine(idx) {
 }
 
 function saveMemeToStorage() {
-    var memeCopy = JSON.parse(JSON.stringify(gMeme))
+    var meme = JSON.parse(JSON.stringify(gMeme))
     if (window.gElCanvas) {
         try {
-            memeCopy.savedImg = gElCanvas.toDataURL('image/png')
+            meme.savedImg = gElCanvas.toDataURL('image/png')
         } catch (e) { }
     }
 
     var memes = loadFromStorage(SAVED_MEMES_KEY) || []
     var idx = memes.length
-    memeCopy.savedIdx = idx
+
+    meme.savedIdx = idx
     gMeme.savedIdx = idx
-    memes.push(memeCopy)
+
+    memes.push(meme)
     saveToStorage(SAVED_MEMES_KEY, memes)
 }
 
@@ -159,16 +161,17 @@ function overwriteSavedMeme(idx) {
         return
     }
 
-    var memeCopy = JSON.parse(JSON.stringify(gMeme))
+    var meme = JSON.parse(JSON.stringify(gMeme))
     if (window.gElCanvas) {
         try {
-            memeCopy.savedImg = gElCanvas.toDataURL('image/png')
+            meme.savedImg = gElCanvas.toDataURL('image/png')
         } catch (e) { }
     }
 
-    memeCopy.savedIdx = idx
+    meme.savedIdx = idx
     gMeme.savedIdx = idx
-    memes[idx] = memeCopy
+
+    memes[idx] = meme
     saveToStorage(SAVED_MEMES_KEY, memes)
 }
 
@@ -186,13 +189,13 @@ function loadMeme(meme) {
 }
 
 function resetMemeDataToInitial() {
-    var imgId = gMeme.selectedImgId || 1
+    var id = gMeme.selectedImgId || 1
     gMeme = createInitialMeme()
-    gMeme.selectedImgId = imgId
+    gMeme.selectedImgId = id
 }
 
-function saveToStorage(key, value) {
-    localStorage.setItem(key, JSON.stringify(value))
+function saveToStorage(key, val) {
+    localStorage.setItem(key, JSON.stringify(val))
 }
 
 function loadFromStorage(key) {

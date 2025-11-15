@@ -428,3 +428,12 @@ function applyEditorDefaults() {
     line.size = line.size || gEditorDefaults.size
     updateEditorInputs()
 }
+
+window.addEventListener('click', function (ev) {
+    var box = document.querySelector('.emoji-box')
+    var toggle = document.querySelector('.emoji-toggle')
+    if (!box || box.classList.contains('hidden')) return
+    if (box.contains(ev.target)) return
+    if (toggle.contains(ev.target)) return
+    box.classList.add('hidden')
+})
