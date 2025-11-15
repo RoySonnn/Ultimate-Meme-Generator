@@ -374,3 +374,10 @@ function onMoveRight() {
     line.x += MOVE_DELTA
     renderMeme()
 }
+
+function toggleEmojiBox() {
+    var el = document.querySelector('.emoji-box')
+    if (!el) return
+    el.classList.toggle('hidden')
+}
+

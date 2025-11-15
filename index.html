@@ -72,9 +72,31 @@
           <div class="canvas-wrapper">
             <canvas id="meme-canvas"></canvas>
           </div>
-
           <div class="editor-panel">
-            <h2 class="panel-title">Edit Text Lines</h2>
+            <div class="editor-header">
+              <h2>
+                Edit Text Lines:<span id="line-index">1</span> /
+                <span id="line-count">1</span>
+              </h2>
+
+              <div class="line-tools">
+                <button onclick="onAddLine()">＋</button>
+                <button onclick="onSwitchLine()">⇅</button>
+                <button onclick="onDeleteLine()">🗑</button>
+              </div>
+            </div>
+
+            <div class="font-tools">
+              <select class="font-select" onchange="onFontSelected(this.value)">
+                <option value="Arial">Arial</option>
+                <option value="Impact">Impact</option>
+                <option value="Comic Sans MS">Comic Sans</option>
+              </select>
+
+              <button onclick="onChangeFontSize(-2)">A−</button>
+              <button onclick="onChangeFontSize(2)">A＋</button>
+            </div>
+
             <input
               type="text"
               class="text-input"
@@ -82,36 +104,7 @@
               oninput="onSetLineTxt(this.value)"
             />
 
-            <div class="line-toolbar">
-              <div class="line-info">
-                <span class="line-label">Text line:</span>
-                <span class="line-counter">
-                  <span id="line-index">1</span> /
-                  <span id="line-count">1</span>
-                </span>
-              </div>
-
-              <div class="line-actions">
-                <button onclick="onAddLine()">＋</button>
-                <button onclick="onSwitchLine()">⇅</button>
-                <button onclick="onDeleteLine()">🗑</button>
-              </div>
-            </div>
-
-            <div class="toolbar-row">
-              <select class="font-select" onchange="onFontSelected(this.value)">
-                <option value="Arial" selected>Arial</option>
-                <option value="Impact">Impact</option>
-                <option value="Comic Sans MS">Comic Sans</option>
-              </select>
-
-              <div class="font-size-group">
-                <button onclick="onChangeFontSize(-2)">A−</button>
-                <button onclick="onChangeFontSize(2)">A＋</button>
-              </div>
-            </div>
-
-            <div class="toolbar-row">
+            <div class="emoji-pod-row">
               <div class="move-pad">
                 <button onclick="onMoveUp()">⬆️</button>
                 <div class="move-middle-row">
@@ -123,37 +116,22 @@
               </div>
             </div>
 
-            <div class="toolbar-row">
-              <button class="color-btn">
-                <span class="text-color-A">A</span>
-                <input
-                  type="color"
-                  class="text-color-input"
-                  onchange="onSetColor(this.value)"
-                />
+            <div class="emoji-container">
+              <button class="emoji-toggle" onclick="toggleEmojiBox()">
+                🙂
               </button>
-
-              <button class="color-btn">
-                <span class="stroke-color-A">A</span>
-                <input
-                  type="color"
-                  class="stroke-color-input"
-                  onchange="onSetStrokeColor(this.value)"
-                />
-              </button>
-            </div>
-
-            <div class="emojis-row">
-              <button onclick="onAddSticker('🤦‍♂️')">🤦‍♂️</button>
-              <button onclick="onAddSticker('🤬')">🤬</button>
-              <button onclick="onAddSticker('😂')">😂</button>
-              <button onclick="onAddSticker('🤘')">🤘</button>
-              <button onclick="onAddSticker('☝️')">☝️</button>
-              <button onclick="onAddSticker('👑')">👑</button>
-              <button onclick="onAddSticker('❤️')">❤️</button>
-              <button onclick="onAddSticker('😈')">😈</button>
-              <button onclick="onAddSticker('🙏')">🙏</button>
-              <button onclick="onAddSticker('💩')">💩</button>
+              <div class="emoji-box hidden">
+                <button onclick="onAddSticker('🤦‍♂️')">🤦‍♂️</button>
+                <button onclick="onAddSticker('🤬')">🤬</button>
+                <button onclick="onAddSticker('😂')">😂</button>
+                <button onclick="onAddSticker('🤘')">🤘</button>
+                <button onclick="onAddSticker('☝️')">☝️</button>
+                <button onclick="onAddSticker('👑')">👑</button>
+                <button onclick="onAddSticker('❤️')">❤️</button>
+                <button onclick="onAddSticker('😈')">😈</button>
+                <button onclick="onAddSticker('🙏')">🙏</button>
+                <button onclick="onAddSticker('💩')">💩</button>
+              </div>
             </div>
 
             <div class="actions-row">
