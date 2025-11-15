@@ -397,6 +397,18 @@ function onMoveRight() {
     renderMeme()
 }
 
+function onCenterLine() {
+    var meme = getMeme()
+    var line = meme.lines[meme.selectedLineIdx]
+    if (!line || !gElCanvas) return
+
+    line.x = gElCanvas.width / 2
+    line.y = gElCanvas.height / 2
+
+    renderMeme()
+}
+
+
 function toggleEmojiBox() {
     var el = document.querySelector('.emoji-box')
     if (!el) return

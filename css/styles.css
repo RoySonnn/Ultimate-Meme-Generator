@@ -39,7 +39,7 @@ button {
 
 .logo {
   font-family: Impact, "Arial Black";
-  font-size: 1.4rem;
+  font-size: clamp(1rem, 4vw, 1.6rem);
   color: #005499;
   text-shadow: 1px 1px 0 #3295f9;
   cursor: pointer;
