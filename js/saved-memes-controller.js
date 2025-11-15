@@ -1,6 +1,7 @@
 'use strict'
 
 function onShowSavedMemes() {
+    clearAllSearchInputs()
     document.querySelector('.gallery').classList.add('hidden')
     document.querySelector('.editor').classList.add('hidden')
     document.querySelector('.saved-memes').classList.remove('hidden')
@@ -36,6 +37,7 @@ function renderSavedMemes() {
 
 
 function onLoadSavedMeme(idx) {
+    clearAllSearchInputs()
     var saved = getSavedMemes()
     var meme = saved[idx]
     loadMeme(meme, idx)
@@ -46,6 +48,7 @@ function onLoadSavedMeme(idx) {
     renderMeme()
     renderTags()
 }
+
 
 
 
@@ -63,3 +66,52 @@ function saveKeywordsToStorage() {
     gImgs.forEach(img => map[img.id] = img.keywords)
     saveToStorage(IMG_KEYWORDS_KEY, map)
 }
+
+
+function onSearchSaved(ev) {
+    var txt = ev.target.value.toLowerCase().trim()
+    var memes = getSavedMemes()
+
+    if (!txt) {
+        renderSavedMemes()
+        return
+    }
+
+    var filtered = memes.filter(function (meme) {
+        var matchText = meme.lines.some(line =>
+            line.txt.toLowerCase().includes(txt)
+        )
+
+        var img = getImgById(meme.selectedImgId)
+        var matchTag = img && img.keywords.some(keyword =>
+            keyword.toLowerCase().includes(txt)
+        )
+
+        return matchText || matchTag
+    })
+
+    renderSavedFiltered(filtered)
+}
+
+function renderSavedFiltered(memes) {
+    var el = document.querySelector('.saved-grid')
+
+    if (!memes.length) {
+        el.innerHTML = '<p>No saved memes match your search.</p>'
+        return
+    }
+
+    var html = memes.map(function (meme, idx) {
+        var src = meme.savedImg || getImgById(meme.selectedImgId).url
+
+        return `
+            <div class="saved-item">
+                <img src="${src}" class="gallery-img" onclick="onLoadSavedMeme(${idx})">
+                <button class="saved-delete-btn" onclick="onDeleteSavedMeme(${idx})">✕</button>
+            </div>
+        `
+    }).join('')
+
+    el.innerHTML = html
+}
+
