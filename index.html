@@ -170,24 +170,23 @@
                 <button onclick="onMoveDown()">⬇️</button>
               </div>
             </div>
-
-            <div class="tag-row">
+            <div class="tag-section">
               <div class="tag-list"></div>
-
-              <button class="tag-custom-btn" onclick="onShowTagInput()">
-                Custom tag +
-              </button>
-
-              <input
-                type="text"
-                class="tag-editor-input hidden"
-                placeholder="Add tag"
-                onkeydown="onTagInputKey(event)"
-              />
+              <div class="tag-custom-area">
+                <button class="tag-custom-btn" onclick="onShowTagInput()">
+                  Custom tag +
+                </button>
+                <input
+                  type="text"
+                  class="tag-editor-input hidden"
+                  placeholder="Add tag"
+                  onkeydown="onTagInputKey(event)"
+                />
+              </div>
             </div>
 
             <div class="actions-row">
-              <button class="btn-save" onclick="onSaveMeme()">Save</button>
+              <button class="btn-save" onclick="onSaveMeme()">Save to Memes</button>
               <button class="btn-save-copy hidden" onclick="onSaveMemeCopy()">
                 Save As Copy
               </button>

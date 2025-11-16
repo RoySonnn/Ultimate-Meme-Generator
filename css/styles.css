@@ -181,12 +181,28 @@ button {
   color: #fff;
   border: none;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.saved-delete-btn span {
+  display: block;
+  line-height: 1;
+}
+
+.saved-delete-btn {
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.saved-delete-btn:hover {
+  transform: scale(1.2);
+  background: rgba(0, 0, 0, 0.85);
 }
 
 .btn-back {
@@ -289,11 +305,18 @@ button {
 }
 
 .font-tools button {
-  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  min-width: 32px;
+  padding: 0 12px;
   border: 1px solid #ddd;
+  border-radius: 6px;
   background-color: #f7f7f7;
-  padding: 2px 6px;
-  font-size: 12px;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
 }
 
 .text-input {
@@ -303,6 +326,18 @@ button {
   border: 1px solid #ddd;
   background: #fff;
   font-size: 14px;
+}
+
+.font-tools .btn-font-smaller,
+.font-tools .btn-font-bigger {
+  font-size: 14px;
+}
+
+.font-tools .btn-fill-color,
+.font-tools .btn-stroke-color {
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1;
 }
 
 .emoji-pod-row {
@@ -350,13 +385,6 @@ button {
   flex-wrap: wrap;
 }
 
-.tag-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  flex: 1;
-}
-
 .tag-item {
   display: flex;
   align-items: center;
@@ -365,6 +393,24 @@ button {
   border-radius: 999px;
   background-color: #e6f0ff;
   font-size: 12px;
+}
+
+.tag-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag-custom-area {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .tag-remove-btn {
@@ -463,12 +509,15 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  gap: 6px;
+  margin: 0 auto;
 }
 
 .move-middle-row {
   display: flex;
-  gap: 4px;
+  justify-content: center;
+  gap: 6px;
 }
 
 .move-pad button,
@@ -487,6 +536,11 @@ button {
 .actions-row {
   display: flex;
   gap: 8px;
+  justify-content: space-between;
+}
+
+.actions-row button {
+  flex: 1;
 }
 
 .btn-save,
@@ -512,21 +566,21 @@ button {
 }
 
 .color-btn {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 6px;
   border: 1px solid #ddd;
   background: #f7f7f7;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
   position: relative;
+  padding: 0;
 }
 
 .text-color-A,
 .stroke-color-A {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
   line-height: 1;
 }

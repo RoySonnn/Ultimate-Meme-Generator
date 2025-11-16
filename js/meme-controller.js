@@ -77,7 +77,7 @@ function renderMeme() {
 
             if (meme.isLineSelected && idx === meme.selectedLineIdx) {
                 var rect = getLineRect(line)
-                gCtx.strokeStyle = '#3295f9'
+                gCtx.strokeStyle = '#0155a8ff'
                 gCtx.strokeRect(rect.x, rect.y, rect.w, rect.h)
             }
         })
