@@ -131,12 +131,31 @@
               </button>
             </div>
 
-            <input
-              type="text"
-              class="text-input"
-              placeholder="Edit text"
-              oninput="onSetLineTxt(this.value)"
-            />
+            <div class="text-input-wrapper">
+              <input
+                type="text"
+                class="text-input"
+                placeholder="Edit text"
+                oninput="onSetLineTxt(this.value)"
+              />
+
+              <button class="emoji-toggle" onclick="toggleEmojiBox()">
+                🙂
+              </button>
+
+              <div class="emoji-box hidden">
+                <button onclick="onAddSticker('🤦‍♂️')">🤦‍♂️</button>
+                <button onclick="onAddSticker('🤬')">🤬</button>
+                <button onclick="onAddSticker('😂')">😂</button>
+                <button onclick="onAddSticker('🤘')">🤘</button>
+                <button onclick="onAddSticker('☝️')">☝️</button>
+                <button onclick="onAddSticker('👑')">👑</button>
+                <button onclick="onAddSticker('❤️')">❤️</button>
+                <button onclick="onAddSticker('😈')">😈</button>
+                <button onclick="onAddSticker('🙏')">🙏</button>
+                <button onclick="onAddSticker('💩')">💩</button>
+              </div>
+            </div>
 
             <div class="emoji-pod-row">
               <div class="move-pad">
@@ -149,24 +168,6 @@
                   <button onclick="onMoveRight()">➡️</button>
                 </div>
                 <button onclick="onMoveDown()">⬇️</button>
-              </div>
-            </div>
-
-            <div class="emoji-container">
-              <button class="emoji-toggle" onclick="toggleEmojiBox()">
-                🙂
-              </button>
-              <div class="emoji-box hidden">
-                <button onclick="onAddSticker('🤦‍♂️')">🤦‍♂️</button>
-                <button onclick="onAddSticker('🤬')">🤬</button>
-                <button onclick="onAddSticker('😂')">😂</button>
-                <button onclick="onAddSticker('🤘')">🤘</button>
-                <button onclick="onAddSticker('☝️')">☝️</button>
-                <button onclick="onAddSticker('👑')">👑</button>
-                <button onclick="onAddSticker('❤️')">❤️</button>
-                <button onclick="onAddSticker('😈')">😈</button>
-                <button onclick="onAddSticker('🙏')">🙏</button>
-                <button onclick="onAddSticker('💩')">💩</button>
               </div>
             </div>
 
