@@ -28,24 +28,24 @@ function createInitialMeme() {
 }
 
 var gDefaultKeywords = {
-    1: ['funny', 'baby'],
-    2: ['cat'],
-    3: ['dog', 'cute'],
-    4: ['angry'],
-    5: ['funny'],
-    6: ['serious'],
-    7: ['baby'],
-    8: ['happy'],
-    9: ['funny'],
-    10: ['angry'],
-    11: ['weird'],
-    12: ['sad'],
-    13: ['happy'],
-    14: ['funny'],
-    15: ['confused'],
-    16: ['sad'],
-    17: ['happy'],
-    18: ['angry']
+    1: ['President','Funny','Serious','Angry'],
+    2: ['Dog','Funny', 'Cute'],
+    3: ['Dog', 'Cute', 'Baby'],
+    4: ['Cat', 'Funny', 'Cute'],
+    5: ['Funny', 'Baby', 'Cute','Serious'],
+    6: ['Funny','Serious', 'High'],
+    7: ['Baby', 'Cute', 'Happy', 'Funny'],
+    8: ['Happy', 'Funny'],
+    9: ['Funny','Joyful','Bad'],
+    10: ['President','Funny'],
+    11: ['Serious','Weird','Funny'],
+    12: ['Serious','Angry','Funny'],
+    13: ['Happy', 'Funny'],
+    14: ['Sad','Serious'],
+    15: ['Sad','Serious','LOTR'],
+    16: ['Funny','Weird','Star trek'],
+    17: ['President','Funny','Serious','Angry'],
+    18: ['Funny','Weird','Sad'],
 }
 
 function initImgs() {
