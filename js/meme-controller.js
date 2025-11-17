@@ -373,14 +373,20 @@ function syncColorButtonsWithLine() {
 
 function updateSaveCopyVisibility() {
     var meme = getMeme()
-    var btn = document.querySelector('.btn-save-copy')
-    if (!btn) return
-    if (typeof meme.savedIdx === 'number' && meme.savedIdx >= 0) {
-        btn.classList.remove('hidden')
-    } else {
-        btn.classList.add('hidden')
+
+    var btnSave = document.querySelector('.btn-save')
+    var btnCopy = document.querySelector('.btn-save-copy')
+    if (!btnSave || !btnCopy) return
+    if (typeof meme.savedIdx !== 'number' || meme.savedIdx < 0) {
+        btnSave.textContent = 'Save to Memes'
+        btnCopy.classList.add('hidden')
+    }
+    else {
+        btnSave.textContent = 'Save'
+        btnCopy.classList.remove('hidden')
     }
 }
+
 
 function onMoveUp() {
     var meme = getMeme()

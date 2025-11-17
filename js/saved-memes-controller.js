@@ -51,6 +51,7 @@ function onLoadSavedMeme(idx) {
     var saved = getSavedMemes()
     var meme = saved[idx]
     loadMeme(meme)
+    gMeme.savedIdx = idx
     document.querySelector('.saved-memes').classList.add('hidden')
     document.querySelector('.editor').classList.remove('hidden')
     updateEditorInputs()

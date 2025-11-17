@@ -27,6 +27,7 @@ function onImgSelect(imgId) {
     document.querySelector('.btn-back.inline').textContent = 'Back to Gallery'
     clearAllSearchInputs()
     setImg(imgId)
+    gMeme.savedIdx = -1
     resetMemeToDefault()
     showEditor()
     renderMeme()
