@@ -37,9 +37,7 @@
     <main class="main-content">
       <section class="gallery">
         <div class="gallery-toolbar">
-          <div class="tag-search">
-            <div class="selected-tags"></div>
-
+          <div class="gallery-search-row">
             <input
               type="text"
               class="tag-input tag-search-input"
@@ -47,6 +45,8 @@
               oninput="onLiveTagSearch(this.value)"
               onclick="onToggleTagDropdown()"
             />
+
+            <div class="selected-tags"></div>
 
             <div class="tag-dropdown hidden">
               <ul class="tag-options"></ul>
@@ -58,19 +58,21 @@
       </section>
 
       <section class="saved-memes hidden">
-        <div class="saved-toolbar saved-tag-search">
-          <div class="saved-selected-tags"></div>
+        <div class="saved-toolbar">
+          <div class="saved-search-row">
+            <input
+              type="text"
+              class="tag-input saved-tag-search-input"
+              placeholder="Search tags..."
+              oninput="onSavedLiveTagSearch(this.value)"
+              onclick="onSavedToggleTagDropdown()"
+            />
 
-          <input
-            type="text"
-            class="tag-input saved-tag-search-input"
-            placeholder="Search tags..."
-            oninput="onSavedLiveTagSearch(this.value)"
-            onclick="onSavedToggleTagDropdown()"
-          />
+            <div class="saved-selected-tags"></div>
 
-          <div class="saved-tag-dropdown hidden">
-            <ul class="saved-tag-options"></ul>
+            <div class="saved-tag-dropdown hidden">
+              <ul class="saved-tag-options"></ul>
+            </div>
           </div>
         </div>
 

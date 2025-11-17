@@ -704,6 +704,21 @@ button {
   background: #f2f2f2;
 }
 
+.gallery-search-row,
+.saved-search-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.selected-tags,
+.saved-selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 @media (min-width: 600px) {
   .gallery-grid,
   .saved-grid {
