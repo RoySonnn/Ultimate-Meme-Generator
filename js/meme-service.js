@@ -1,7 +1,7 @@
 'use strict'
 
-var SAVED_MEMES_KEY = 'savedMemes'
-var IMG_KEYWORDS_KEY = 'imgKeywords'
+const SAVED_MEMES_KEY = 'savedMemes'
+const IMG_KEYWORDS_KEY = 'imgKeywords'
 var gImgs = []
 var gMeme = createInitialMeme()
 var gKeywordSearchCountMap = {}
@@ -174,8 +174,6 @@ function deleteLine() {
 
     gMeme.isLineSelected = true
 }
-
-
 
 function saveMemeToStorage() {
     var meme = JSON.parse(JSON.stringify(gMeme))

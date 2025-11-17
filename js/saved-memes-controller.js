@@ -2,7 +2,6 @@
 
 var gSavedSelectedTags = []
 
-
 function onShowSavedMemes() {
     document.querySelector('.gallery').classList.add('hidden')
     document.querySelector('.editor').classList.add('hidden')
@@ -17,7 +16,6 @@ function onShowSavedMemes() {
         renderSavedMemes()
     }
 }
-
 
 function renderSavedMemes() {
     var saved = getSavedMemes()
@@ -101,9 +99,6 @@ function renderSavedTagOptions(txt = '') {
         .map(tag => `<li onclick="onSavedSelectTag('${tag}')">${tag}</li>`)
         .join('')
 }
-
-
-
 
 function renderSavedFiltered(memes) {
     var el = document.querySelector('.saved-grid')

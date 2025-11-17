@@ -83,7 +83,6 @@ function onEditorBack() {
     }
 }
 
-
 function onToggleTagDropdown() {
     var box = document.querySelector('.tag-dropdown')
     var inputVal = document.querySelector('.tag-search-input').value || ''
@@ -95,8 +94,6 @@ function onToggleTagDropdown() {
         box.classList.add('hidden')
     }
 }
-
-
 
 function renderTagOptions() {
     var elList = document.querySelector('.tag-options')
@@ -160,9 +157,6 @@ function onLiveTagSearch(txt) {
     renderFilteredGallery(filtered);
 }
 
-
-
-
 function onSelectTag(tag) {
     if (!gSelectedTags.includes(tag)) {
         gSelectedTags.push(tag)
@@ -206,7 +200,6 @@ window.addEventListener('click', function (ev) {
     if (!drop || !searchBox) return
     if (!searchBox.contains(ev.target)) drop.classList.add('hidden')
 })
-
 
 function getAvailableTags() {
     var imgs = gImgs

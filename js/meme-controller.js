@@ -6,7 +6,7 @@ var gIsDragging = false
 var gDraggedLineIdx = null
 var gLastPos = null
 
-var MOVE_DELTA = 5
+const MOVE_DELTA = 5
 
 var gEditorDefaults = {
     color: '#ff0000',
@@ -43,8 +43,6 @@ function renderMeme() {
         gCtx.clearRect(0, 0, gElCanvas.width, gElCanvas.height)
         gCtx.drawImage(elImg, 0, 0, gElCanvas.width, gElCanvas.height)
 
-
-
         meme.lines.forEach(line => {
             if (!line.__fixed) {
                 line.x = gElCanvas.width / 2
@@ -56,7 +54,6 @@ function renderMeme() {
                 line.__fixed = true
             }
         })
-
 
         meme.lines.forEach(function (line, idx) {
             var fillColor = line.color || '#ff0000'
@@ -121,7 +118,6 @@ function updateEditorInputs() {
     syncColorButtonsWithLine()
     updateSaveCopyVisibility()
 }
-
 
 function onSetLineTxt(txt) {
     var meme = getMeme()
