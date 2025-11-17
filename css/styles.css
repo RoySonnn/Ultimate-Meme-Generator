@@ -6,6 +6,15 @@
   padding: 0;
 }
 
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
 body {
   margin: 0;
   background-color: #e9eaec;
@@ -744,6 +753,23 @@ button {
   font-size: 0.5rem;
   color: #666;
   letter-spacing: 0.3px;
+}
+
+.saved-memes {
+  min-height: 300px;
+}
+
+.saved-grid {
+  min-height: 200px;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
 }
 
 @media (min-width: 600px) {
