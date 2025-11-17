@@ -14,7 +14,7 @@ function createInitialMeme() {
         savedIdx: -1,
         lines: [
             {
-                txt: 'Your text here',
+                txt: '',
                 size: 22,
                 color: '#ff0000',
                 strokeColor: '#000000',

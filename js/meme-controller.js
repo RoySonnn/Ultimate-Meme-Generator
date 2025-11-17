@@ -69,8 +69,10 @@ function renderMeme() {
             gCtx.strokeStyle = strokeColor
             gCtx.lineWidth = stroke
 
-            gCtx.strokeText(line.txt, line.x, line.y)
-            gCtx.fillText(line.txt, line.x, line.y)
+            var displayTxt = line.txt || "Your text here";
+            gCtx.strokeText(displayTxt, line.x, line.y);
+            gCtx.fillText(displayTxt, line.x, line.y);
+
 
             if (meme.isLineSelected && idx === meme.selectedLineIdx) {
                 var rect = getLineRect(line)
@@ -327,7 +329,7 @@ function getLineRect(line) {
     gCtx.textAlign = align
     gCtx.textBaseline = 'middle'
 
-    var txt = line.txt || ''
+    var txt = line.txt || '"Your text here"'
     var metrics = gCtx.measureText(txt)
     var width = metrics.width
     var xStart = line.x
