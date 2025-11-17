@@ -719,6 +719,33 @@ button {
   gap: 6px;
 }
 
+.footer {
+  background-color: #fff;
+  padding: 0.4rem 0 0.4rem;
+  box-shadow: 0 -1px 3px rgb(0 0 0 / 0.08);
+  margin-top: 1rem;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.footer-title {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.footer-names {
+  font-size: 0.5rem;
+  color: #666;
+  letter-spacing: 0.3px;
+}
+
 @media (min-width: 600px) {
   .gallery-grid,
   .saved-grid {
